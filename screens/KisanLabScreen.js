@@ -1,6 +1,3 @@
-// KRUSHI-SOOTRA (कृषी-सूत्र)
-// Kisan Lab: Soil Health Card OCR & Crop Disease Diagnostics
-
 import React, { useState } from 'react';
 import {
   View,
@@ -10,16 +7,18 @@ import {
   TouchableOpacity,
   ActivityIndicator,
   Alert,
+  Image,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { Colors, Radii, Shadows, Spacing, Typography } from '../constants/theme';
 import SegmentedControl from '../components/ui/SegmentedControl';
 import PrimaryButton from '../components/ui/PrimaryButton';
+import { takePhotoWithCamera, pickImageFromGallery } from '../services/cameraService';
 
 export default function KisanLabScreen() {
   const [activeTab, setActiveTab] = useState(0); // 0: Soil OCR, 1: Crop Disease
   const [scanning, setScanning] = useState(false);
-  const [scanComplete, setScanComplete] = useState(false);
+  const [capturedImageUri, setCapturedImageUri] = useState(null);
 
   // Simulated OCR Soil Report Data
   const [soilReport, setSoilReport] = useState({
@@ -43,18 +42,47 @@ export default function KisanLabScreen() {
     chemicalRemedy: 'मॅन्कोझेब (Mancozeb 75% WP) ३० ग्रॅम किंवा टेब्युकोनाझोल (Tebuconazole) १५ मिली प्रति १५ लिटर पंपासाठी फवारा.',
   });
 
-  const handleStartScan = () => {
+  const handleStartScan = async () => {
+    Alert.alert(
+      activeTab === 0 ? 'माती आरोग्य पत्रिका फोटो' : 'बाधित पानाचा फोटो',
+      'फोटो कसा घ्यायचा आहे?',
+      [
+        {
+          text: 'कॅमेरा उघडा (Camera)',
+          onPress: async () => {
+            const res = await takePhotoWithCamera();
+            if (res.success && res.uri) {
+              setCapturedImageUri(res.uri);
+              processDiagnostic(res.uri);
+            }
+          },
+        },
+        {
+          text: 'गॅलरीतून निवडा (Gallery)',
+          onPress: async () => {
+            const res = await pickImageFromGallery();
+            if (res.success && res.uri) {
+              setCapturedImageUri(res.uri);
+              processDiagnostic(res.uri);
+            }
+          },
+        },
+        { text: 'रद्द करा', style: 'cancel' },
+      ]
+    );
+  };
+
+  const processDiagnostic = (imageUri) => {
     setScanning(true);
     setTimeout(() => {
       setScanning(false);
-      setScanComplete(true);
       Alert.alert(
         'स्कॅन यशस्वी!',
         activeTab === 0
           ? 'माती आरोग्य पत्रिकेतील N-P-K पोषणद्रव्यांचे यशस्वी वाचन झाले आहे.'
           : 'पानावरील रोग निदानाचे अचूक विश्लेषण पूर्ण झाले आहे.'
       );
-    }, 1600);
+    }, 1200);
   };
 
   return (

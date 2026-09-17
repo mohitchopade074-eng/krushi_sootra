@@ -1,5 +1,58 @@
 // KRUSHI-SOOTRA (कृषी-सूत्र)
-// Location Service & Mathematical Haversine Distance Engine (Zero-Cost, Offline-Resilient)
+// Location Service & Mathematical Haversine Distance Engine (Live GPS + Reverse Geocoding)
+
+import * as Location from 'expo-location';
+
+/**
+ * Request GPS permission and fetch the user's real current device coordinates
+ */
+export async function requestDeviceLocation() {
+  try {
+    const { status } = await Location.requestForegroundPermissionsAsync();
+    if (status !== 'granted') {
+      return {
+        success: false,
+        error: 'Location permission not granted',
+        fallback: AGRICULTURAL_LOCATIONS.PUNE,
+      };
+    }
+
+    const loc = await Location.getCurrentPositionAsync({
+      accuracy: Location.Accuracy.Balanced,
+    });
+
+    const latitude = loc.coords.latitude;
+    const longitude = loc.coords.longitude;
+
+    // Reverse geocode to get human-readable village/city name
+    let placeName = 'पुणे (हवेली)';
+    try {
+      const addresses = await Location.reverseGeocodeAsync({ latitude, longitude });
+      if (addresses && addresses.length > 0) {
+        const a = addresses[0];
+        const locality = a.district || a.subregion || a.city || a.name || 'महाराष्ट्र';
+        const region = a.region || 'महाराष्ट्र';
+        placeName = `${locality}, ${region}`;
+      }
+    } catch (e) {
+      console.warn('Reverse geocode fallback:', e?.message);
+    }
+
+    return {
+      success: true,
+      latitude,
+      longitude,
+      placeName,
+    };
+  } catch (error) {
+    console.warn('GPS location retrieval error:', error?.message);
+    return {
+      success: false,
+      error: error.message,
+      fallback: AGRICULTURAL_LOCATIONS.PUNE,
+    };
+  }
+}
 
 /**
  * Calculates the great-circle distance between two geographic points using Haversine formula.
@@ -35,11 +88,6 @@ export function calculateHaversineDistanceKm(lat1, lon1, lat2, lon2) {
 
 /**
  * Filter items located within a specific radius (default: 20km for farmer equipment/labour discovery)
- * @param {Array} items Array of items containing latitude and longitude
- * @param {number} userLat Current user latitude
- * @param {number} userLon Current user longitude
- * @param {number} maxRadiusKm Max radius in kilometers (default: 20)
- * @returns {Array} Sorted items with attached calculated distance
  */
 export function filterByRadius(items = [], userLat, userLon, maxRadiusKm = 20) {
   if (!userLat || !userLon || !Array.isArray(items)) {
@@ -65,9 +113,6 @@ export function filterByRadius(items = [], userLat, userLon, maxRadiusKm = 20) {
 
 /**
  * Format distance for display in localized UI
- * @param {number} distanceKm
- * @param {'mr' | 'en' | 'hi'} language
- * @returns {string} e.g. "3.4 किमी" or "3.4 km"
  */
 export function formatDistance(distanceKm, language = 'mr') {
   if (distanceKm == null) return '';

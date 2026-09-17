@@ -1,7 +1,4 @@
-// KRUSHI-SOOTRA (कृषी-सूत्र)
-// Farmer Home Dashboard Screen (Apple HIG Agricultural Mobile Design)
-
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import {
   View,
   Text,
@@ -31,7 +28,7 @@ import {
 import WeatherCard from '../components/WeatherCard';
 import EquipmentQuickCard from '../components/EquipmentQuickCard';
 import StatusBadge from '../components/ui/StatusBadge';
-import { filterByRadius, AGRICULTURAL_LOCATIONS } from '../services/locationService';
+import { filterByRadius, AGRICULTURAL_LOCATIONS, requestDeviceLocation } from '../services/locationService';
 
 // Sample verified agricultural inventory situated near Pune / Maharashtra
 const MOCK_NEARBY_EQUIPMENT = [
@@ -107,6 +104,21 @@ export default function FarmerHomeScreen({
 
   const strings = STRINGS[language] || STRINGS.mr;
 
+  // Auto-request live device GPS on startup
+  useEffect(() => {
+    const fetchGPS = async () => {
+      const res = await requestDeviceLocation();
+      if (res.success && res.latitude && res.longitude) {
+        setSelectedLocation({
+          name: res.placeName,
+          lat: res.latitude,
+          lon: res.longitude,
+        });
+      }
+    };
+    fetchGPS();
+  }, []);
+
   // Filter nearby equipment within 20 km radius using Haversine algorithm
   const nearbyItems = useMemo(() => {
     return filterByRadius(
@@ -143,13 +155,41 @@ export default function FarmerHomeScreen({
     if (onLanguageChange) onLanguageChange(next);
   };
 
-  const cycleLocation = () => {
-    const locKeys = Object.keys(AGRICULTURAL_LOCATIONS);
-    const currentIndex = locKeys.findIndex(
-      (k) => AGRICULTURAL_LOCATIONS[k].name === selectedLocation.name
+  const cycleLocation = async () => {
+    // Check if user wants live GPS or predefined hub
+    Alert.alert(
+      'शेताचे स्थान निवडा',
+      'स्थान कसे अपडेट करायचे आहे?',
+      [
+        {
+          text: 'माझे थेट GPS स्थान (Live GPS)',
+          onPress: async () => {
+            const res = await requestDeviceLocation();
+            if (res.success) {
+              setSelectedLocation({
+                name: res.placeName,
+                lat: res.latitude,
+                lon: res.longitude,
+              });
+            } else {
+              Alert.alert('माहिती', 'GPS परवानगी उपलब्ध नाही.');
+            }
+          },
+        },
+        {
+          text: 'पुढील कृषी जिल्हा निवडा',
+          onPress: () => {
+            const locKeys = Object.keys(AGRICULTURAL_LOCATIONS);
+            const currentIndex = locKeys.findIndex(
+              (k) => AGRICULTURAL_LOCATIONS[k].name === selectedLocation.name
+            );
+            const nextKey = locKeys[(currentIndex + 1) % locKeys.length];
+            setSelectedLocation(AGRICULTURAL_LOCATIONS[nextKey]);
+          },
+        },
+        { text: 'रद्द करा', style: 'cancel' },
+      ]
     );
-    const nextKey = locKeys[(currentIndex + 1) % locKeys.length];
-    setSelectedLocation(AGRICULTURAL_LOCATIONS[nextKey]);
   };
 
   return (
