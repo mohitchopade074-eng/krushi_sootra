@@ -1,7 +1,4 @@
-// KRUSHI-SOOTRA (कृषी-सूत्र)
-// Main Application Controller with Apple HIG Bottom Navigation & Multi-Role Support
-
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, StyleSheet, SafeAreaView } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
@@ -17,7 +14,10 @@ import WarehouseScreen from './screens/WarehouseScreen';
 import KisanLabScreen from './screens/KisanLabScreen';
 import ProfileScreen from './screens/ProfileScreen';
 
-// Initial dummy booking for realistic showcase
+// Services
+import { createUniversalBooking, subscribeToUniversalBookings, saveUserProfile } from './services/firestoreService';
+
+// Initial dummy booking for fallback & preview
 const INITIAL_BOOKINGS = [
   {
     id: 'BK-108422',
@@ -36,8 +36,37 @@ export default function App() {
   const [currentRole, setCurrentRole] = useState('farmer');
   const [bookings, setBookings] = useState(INITIAL_BOOKINGS);
 
-  const handleAddBooking = (newBooking) => {
+  // Subscribe to real-time Cloud Firestore bookings
+  useEffect(() => {
+    const unsubscribe = subscribeToUniversalBookings(
+      (firestoreBookings) => {
+        if (firestoreBookings && firestoreBookings.length > 0) {
+          setBookings(firestoreBookings);
+        }
+      },
+      (err) => {
+        console.warn('Firestore offline/read status:', err?.message);
+      }
+    );
+    return () => unsubscribe && unsubscribe();
+  }, []);
+
+  const handleAddBooking = async (newBooking) => {
+    // Optimistic local update
     setBookings((prev) => [newBooking, ...prev]);
+
+    // Persist to Cloud Firestore
+    await createUniversalBooking(newBooking);
+  };
+
+  const handleRoleChange = async (newRole) => {
+    setCurrentRole(newRole);
+    await saveUserProfile('current_farmer', { primaryRole: newRole, language });
+  };
+
+  const handleLanguageChange = async (newLang) => {
+    setLanguage(newLang);
+    await saveUserProfile('current_farmer', { primaryRole: currentRole, language: newLang });
   };
 
   const renderActiveScreen = () => {
@@ -69,9 +98,9 @@ export default function App() {
         return (
           <ProfileScreen
             currentRole={currentRole}
-            onRoleChange={setCurrentRole}
+            onRoleChange={handleRoleChange}
             currentLanguage={language}
-            onLanguageChange={setLanguage}
+            onLanguageChange={handleLanguageChange}
             bookings={bookings}
           />
         );
@@ -80,7 +109,7 @@ export default function App() {
         return (
           <FarmerHomeScreen
             language={language}
-            onLanguageChange={setLanguage}
+            onLanguageChange={handleLanguageChange}
             onNavigateTab={(tab) => setActiveTab(tab)}
             onBookEquipment={(item) => setActiveTab('equipment')}
           />
