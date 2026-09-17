@@ -197,7 +197,19 @@ export default function FarmerHomeScreen({
         <View style={styles.topHeader}>
           <View style={styles.brandTitleGroup}>
             <Text style={styles.brandTitle} numberOfLines={1}>{brand.appName}</Text>
-            <Text style={styles.brandTagline} numberOfLines={1}>{brand.tagline}</Text>
+            <GlassPressable
+              style={styles.headerLocationSelector}
+              onPress={cycleLocation}
+              hapticType="selection"
+            >
+              <Ionicons name="location" size={13} color={Colors.primary} />
+              <Text style={styles.headerLocationText} numberOfLines={1}>
+                {typeof selectedLocation?.name === 'object'
+                  ? selectedLocation.name[language] || selectedLocation.name.mr || selectedLocation.name.en
+                  : selectedLocation?.name}
+              </Text>
+              <Text style={styles.headerLocationChange}>({ui.changeLocation})</Text>
+            </GlassPressable>
           </View>
 
           {/* Language Switcher Pill */}
@@ -211,44 +223,6 @@ export default function FarmerHomeScreen({
               {language === 'mr' ? 'मराठी' : language === 'hi' ? 'हिंदी' : 'English'}
             </Text>
           </GlassPressable>
-        </View>
-
-        {/* Farmer Profile & Active Location Strip */}
-        <View style={styles.profileStrip}>
-          <View style={styles.profileInfo}>
-            <View style={styles.avatarCircle}>
-              <Ionicons name="person" size={20} color={Colors.primary} />
-            </View>
-            <View style={styles.greetingGroup}>
-              <Text style={styles.greetingTitle} numberOfLines={1}>
-                {brand.welcomeUser}
-              </Text>
-              <Text style={styles.userStatusText} numberOfLines={1}>
-                {brand.userStatus}
-              </Text>
-              <GlassPressable
-                style={styles.locationSelector}
-                onPress={cycleLocation}
-                hapticType="selection"
-              >
-                <Ionicons name="location" size={13} color={Colors.primaryLight} />
-                <Text style={styles.locationSelectorText} numberOfLines={1}>
-                  {typeof selectedLocation?.name === 'object'
-                    ? selectedLocation.name[language] || selectedLocation.name.mr || selectedLocation.name.en
-                    : selectedLocation?.name}
-                </Text>
-                <Text style={styles.locationChangeLink}>({ui.changeLocation})</Text>
-              </GlassPressable>
-            </View>
-          </View>
-
-          {/* Active Role Badge */}
-          <StatusBadge
-            label={farmerRole}
-            status="success"
-            icon="leaf"
-            size="small"
-          />
         </View>
 
         {/* AI Krushi Assistant High-Priority Quick-Bar */}
@@ -278,9 +252,11 @@ export default function FarmerHomeScreen({
         />
 
         {/* 5 Core Platform Modules Grid */}
-        <View style={styles.sectionHeaderRow}>
-          <Text style={styles.sectionTitle}>{ui.coreServicesTitle}</Text>
-          <Text style={styles.sectionSubtitle}>{ui.coreServicesSub}</Text>
+        <View style={styles.sectionHeaderGroup}>
+          <Text style={styles.sectionTitle}>{ui.coreServicesTitle ? ui.coreServicesTitle.trim() : ''}</Text>
+          {ui.coreServicesSub ? (
+            <Text style={styles.sectionSubtitle}>{ui.coreServicesSub}</Text>
+          ) : null}
         </View>
 
         <View style={styles.modulesGrid}>
@@ -445,84 +421,37 @@ const styles = StyleSheet.create({
     color: Colors.primary,
     marginLeft: 4,
   },
-  profileStrip: {
+  headerLocationSelector: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
     alignItems: 'center',
-    backgroundColor: 'rgba(255, 255, 255, 0.78)',
-    padding: Spacing.md,
+    marginTop: 2,
+  },
+  headerLocationText: {
+    fontSize: Typography.sizes.xs,
+    fontWeight: Typography.weights.bold,
+    color: Colors.primary,
+    marginLeft: 3,
+    maxWidth: 140,
+  },
+  headerLocationChange: {
+    fontSize: 10,
+    color: Colors.textSecondary,
+    marginLeft: 3,
+  },
+  aiQuickBar: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: Colors.glassSurface,
     borderRadius: Radii.xxl,
+    padding: Spacing.md,
     marginBottom: Spacing.md,
     borderWidth: 1.2,
-    borderColor: 'rgba(255, 255, 255, 0.85)',
+    borderColor: 'rgba(221, 214, 254, 0.7)',
     shadowColor: '#0F172A',
     shadowOffset: { width: 0, height: 6 },
     shadowOpacity: 0.06,
     shadowRadius: 14,
     elevation: 3,
-  },
-  profileInfo: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    flex: 1,
-    marginRight: Spacing.xs,
-  },
-  avatarCircle: {
-    width: 44,
-    height: 44,
-    borderRadius: 22,
-    backgroundColor: 'rgba(16, 185, 129, 0.16)',
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginRight: Spacing.md,
-    borderWidth: 1,
-    borderColor: 'rgba(16, 185, 129, 0.3)',
-  },
-  greetingGroup: {
-    flex: 1,
-  },
-  greetingTitle: {
-    fontSize: Typography.sizes.body,
-    fontWeight: Typography.weights.heavy,
-    color: Colors.textPrimary,
-  },
-  userStatusText: {
-    fontSize: 11,
-    fontWeight: Typography.weights.bold,
-    color: Colors.primary,
-    marginTop: 1,
-  },
-  locationSelector: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginTop: 3,
-  },
-  locationSelectorText: {
-    fontSize: Typography.sizes.xs,
-    fontWeight: Typography.weights.semibold,
-    color: Colors.primaryLight,
-    marginLeft: 2,
-    maxWidth: 110,
-  },
-  locationChangeLink: {
-    fontSize: Typography.sizes.xs,
-    color: Colors.textSecondary,
-    marginLeft: 4,
-  },
-  aiQuickBar: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: 'rgba(245, 243, 255, 0.82)',
-    borderRadius: Radii.xxl,
-    padding: Spacing.md,
-    marginBottom: Spacing.md,
-    borderWidth: 1.2,
-    borderColor: 'rgba(221, 214, 254, 0.9)',
-    shadowColor: '#7C3AED',
-    shadowOffset: { width: 0, height: 6 },
-    shadowOpacity: 0.12,
-    shadowRadius: 16,
-    elevation: 4,
   },
   aiIconBubble: {
     width: 38,
@@ -545,6 +474,10 @@ const styles = StyleSheet.create({
     fontSize: Typography.sizes.xs,
     color: '#7C3AED',
     marginTop: 2,
+  },
+  sectionHeaderGroup: {
+    marginBottom: Spacing.md,
+    marginTop: Spacing.xs,
   },
   sectionHeaderRow: {
     flexDirection: 'row',
@@ -635,16 +568,16 @@ const styles = StyleSheet.create({
     fontWeight: Typography.weights.bold,
   },
   soilBanner: {
-    backgroundColor: 'rgba(254, 243, 199, 0.85)',
+    backgroundColor: Colors.glassSurface,
     borderRadius: Radii.xxl,
     padding: Spacing.md,
     marginBottom: Spacing.lg,
     borderWidth: 1.2,
-    borderColor: 'rgba(253, 230, 138, 0.9)',
-    shadowColor: '#B45309',
+    borderColor: 'rgba(253, 230, 138, 0.7)',
+    shadowColor: '#0F172A',
     shadowOffset: { width: 0, height: 6 },
-    shadowOpacity: 0.08,
-    shadowRadius: 16,
+    shadowOpacity: 0.06,
+    shadowRadius: 14,
     elevation: 3,
   },
   soilBannerContent: {

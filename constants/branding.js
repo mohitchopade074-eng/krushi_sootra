@@ -270,7 +270,6 @@ export const UI_STRINGS = {
     ratePerTonMonth: '/ton/month',
     available: 'Available',
     inUse: 'In Use',
-    verified: 'Verified',
     coreServicesTitle: 'Agricultural Services Hub',
     coreServicesSub: 'All farming operations under one single roof',
     soilBannerTitle: 'Scan Soil Health Card',
