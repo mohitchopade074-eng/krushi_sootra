@@ -97,12 +97,15 @@ const MOCK_NEARBY_EQUIPMENT = [
   },
 ];
 
-export default function FarmerHomeScreen() {
-  const [selectedLanguage, setSelectedLanguage] = useState('mr'); // 'mr' | 'hi' | 'en'
-  const [currentRole, setCurrentRole] = useState('farmer');
+export default function FarmerHomeScreen({
+  language = 'mr',
+  onLanguageChange,
+  onNavigateTab,
+  onBookEquipment,
+}) {
   const [selectedLocation, setSelectedLocation] = useState(AGRICULTURAL_LOCATIONS.PUNE);
 
-  const strings = STRINGS[selectedLanguage] || STRINGS.mr;
+  const strings = STRINGS[language] || STRINGS.mr;
 
   // Filter nearby equipment within 20 km radius using Haversine algorithm
   const nearbyItems = useMemo(() => {
@@ -115,24 +118,29 @@ export default function FarmerHomeScreen() {
   }, [selectedLocation]);
 
   const handleModulePress = (module) => {
-    const title = selectedLanguage === 'mr' ? module.titleMr : module.titleEn;
-    Alert.alert(
-      title,
-      `${title} मॉड्युल लवकरच पुढील टप्प्यात उपलब्ध होत आहे.\n(Module integration in upcoming step)`
-    );
+    if (onNavigateTab) {
+      if (module.id === 'equipment') onNavigateTab('equipment');
+      else if (module.id === 'labour') onNavigateTab('labour');
+      else if (module.id === 'warehouse') onNavigateTab('storage');
+      else if (module.id === 'soil' || module.id === 'disease' || module.id === 'ai_assistant') {
+        onNavigateTab('lab');
+      }
+    }
   };
 
-  const handleBookEquipment = (item) => {
-    Alert.alert(
-      'बुकिंग विनंती',
-      `${item.name} साठी थेट बुकिंग प्रक्रिया सुरू झाली आहे. मालकाशी समन्वय साधला जात आहे.`
-    );
+  const handleBookEquipmentItem = (item) => {
+    if (onNavigateTab) {
+      onNavigateTab('equipment');
+    } else if (onBookEquipment) {
+      onBookEquipment(item);
+    }
   };
 
   const toggleLanguage = () => {
-    if (selectedLanguage === 'mr') setSelectedLanguage('hi');
-    else if (selectedLanguage === 'hi') setSelectedLanguage('en');
-    else setSelectedLanguage('mr');
+    let next = 'mr';
+    if (language === 'mr') next = 'hi';
+    else if (language === 'hi') next = 'en';
+    if (onLanguageChange) onLanguageChange(next);
   };
 
   const cycleLocation = () => {
@@ -173,7 +181,7 @@ export default function FarmerHomeScreen() {
           >
             <Ionicons name="globe-outline" size={16} color={Colors.primary} />
             <Text style={styles.langText}>
-              {selectedLanguage === 'mr' ? 'मराठी' : selectedLanguage === 'hi' ? 'हिंदी' : 'English'}
+              {language === 'mr' ? 'मराठी' : language === 'hi' ? 'हिंदी' : 'English'}
             </Text>
           </TouchableOpacity>
         </View>
@@ -215,12 +223,7 @@ export default function FarmerHomeScreen() {
         <TouchableOpacity
           style={styles.aiQuickBar}
           activeOpacity={0.88}
-          onPress={() =>
-            Alert.alert(
-              'AI कृषी सल्लागार',
-              'तुमच्या पिकाबद्दल, खताबद्दल किंवा कीड नियंत्रणाबद्दल प्रश्न विचारा. AI असिस्टंट मॉड्युल पुढील टप्प्यात जोडले जाईल.'
-            )
-          }
+          onPress={() => onNavigateTab ? onNavigateTab('lab') : null}
         >
           <View style={styles.aiIconBubble}>
             <Ionicons name="sparkles" size={20} color="#7C3AED" />
@@ -239,7 +242,7 @@ export default function FarmerHomeScreen() {
           latitude={selectedLocation.lat}
           longitude={selectedLocation.lon}
           locationName={selectedLocation.name}
-          language={selectedLanguage}
+          language={language}
         />
 
         {/* 5 Core Platform Modules Grid */}
@@ -268,7 +271,7 @@ export default function FarmerHomeScreen() {
               <View style={styles.moduleTextGroup}>
                 <View style={styles.moduleTitleRow}>
                   <Text style={styles.moduleTitle} numberOfLines={1}>
-                    {selectedLanguage === 'mr' ? mod.titleMr : mod.titleEn}
+                    {language === 'mr' ? mod.titleMr : mod.titleEn}
                   </Text>
                 </View>
                 <Text style={styles.moduleSubtitle} numberOfLines={2}>
@@ -292,12 +295,7 @@ export default function FarmerHomeScreen() {
         <TouchableOpacity
           style={styles.soilBanner}
           activeOpacity={0.88}
-          onPress={() =>
-            Alert.alert(
-              'माती आरोग्य कार्ड OCR',
-              'माती आरोग्य कार्डचा फोटो काढून N-P-K पोषण द्रव्ये व खताचे प्रमाण स्वयंचलित विश्लेषित करा.'
-            )
-          }
+          onPress={() => onNavigateTab ? onNavigateTab('lab') : null}
         >
           <View style={styles.soilBannerContent}>
             <View style={styles.soilIconBox}>
@@ -329,9 +327,7 @@ export default function FarmerHomeScreen() {
             </Text>
           </View>
           <TouchableOpacity
-            onPress={() =>
-              Alert.alert('सर्व अवजारे', 'संपूर्ण अवजारे कॅटलॉग पुढील टप्प्यात उपलब्ध होईल.')
-            }
+            onPress={() => onNavigateTab ? onNavigateTab('equipment') : null}
           >
             <Text style={styles.viewAllText}>{strings.viewAll}</Text>
           </TouchableOpacity>
@@ -342,9 +338,9 @@ export default function FarmerHomeScreen() {
           <EquipmentQuickCard
             key={item.id}
             item={item}
-            language={selectedLanguage}
-            onBook={() => handleBookEquipment(item)}
-            onPress={() => handleBookEquipment(item)}
+            language={language}
+            onBook={() => handleBookEquipmentItem(item)}
+            onPress={() => handleBookEquipmentItem(item)}
           />
         ))}
 
