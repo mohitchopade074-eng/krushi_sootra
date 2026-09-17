@@ -17,6 +17,7 @@ import SegmentedControl from '../components/ui/SegmentedControl';
 import StatusBadge from '../components/ui/StatusBadge';
 import BottomSheet from '../components/ui/BottomSheet';
 import PrimaryButton from '../components/ui/PrimaryButton';
+import GlassPressable from '../components/ui/GlassPressable';
 
 const INDIVIDUAL_LABOUR_DATA = [
   {
@@ -317,19 +318,21 @@ export default function LabourScreen({ language = 'mr', onBookingConfirmed }) {
                   </View>
 
                   <View style={styles.actionButtons}>
-                    <TouchableOpacity
+                    <GlassPressable
                       style={styles.callBtn}
                       onPress={() => Alert.alert(t.callAction, `${labName}: ${lab.phone}`)}
+                      hapticType="selection"
                     >
                       <Ionicons name="call" size={18} color={Colors.primary} />
-                    </TouchableOpacity>
+                    </GlassPressable>
 
-                    <TouchableOpacity
+                    <GlassPressable
                       style={styles.bookBtn}
                       onPress={() => openBooking(lab)}
+                      hapticType="medium"
                     >
                       <Text style={styles.bookBtnText}>{t.bookAction}</Text>
-                    </TouchableOpacity>
+                    </GlassPressable>
                   </View>
                 </View>
               </View>
@@ -381,19 +384,21 @@ export default function LabourScreen({ language = 'mr', onBookingConfirmed }) {
                   </View>
 
                   <View style={styles.actionButtons}>
-                    <TouchableOpacity
+                    <GlassPressable
                       style={styles.callBtn}
                       onPress={() => Alert.alert(t.callAction, `${leaderName}: ${team.phone}`)}
+                      hapticType="selection"
                     >
                       <Ionicons name="call" size={18} color={Colors.primary} />
-                    </TouchableOpacity>
+                    </GlassPressable>
 
-                    <TouchableOpacity
+                    <GlassPressable
                       style={styles.bookBtn}
                       onPress={() => openBooking(team)}
+                      hapticType="medium"
                     >
                       <Text style={styles.bookBtnText}>{t.bookTeamAction}</Text>
-                    </TouchableOpacity>
+                    </GlassPressable>
                   </View>
                 </View>
               </View>
@@ -535,16 +540,20 @@ const styles = StyleSheet.create({
   },
   listContainer: {
     padding: Spacing.lg,
-    paddingBottom: Spacing.huge,
+    paddingBottom: 110, // Dock avoidance
   },
   card: {
-    backgroundColor: Colors.surface,
+    backgroundColor: 'rgba(255, 255, 255, 0.78)',
     borderRadius: Radii.xxl,
     padding: Spacing.lg,
     marginBottom: Spacing.md,
-    borderWidth: 1,
-    borderColor: Colors.border,
-    ...Shadows.card,
+    borderWidth: 1.2,
+    borderColor: 'rgba(255, 255, 255, 0.85)',
+    shadowColor: '#0F172A',
+    shadowOffset: { width: 0, height: 6 },
+    shadowOpacity: 0.06,
+    shadowRadius: 14,
+    elevation: 3,
   },
   cardHeader: {
     flexDirection: 'row',

@@ -1,11 +1,9 @@
-// KRUSHI-SOOTRA (कृषी-सूत्र)
-// Equipment Discovery Card with Haversine Distance Badge & Apple HIG Ergonomics
-
 import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { Colors, Radii, Shadows, Spacing, Typography } from '../constants/theme';
 import StatusBadge from './ui/StatusBadge';
+import GlassPressable from './ui/GlassPressable';
 import { formatDistance } from '../services/locationService';
 
 export default function EquipmentQuickCard({
@@ -17,10 +15,10 @@ export default function EquipmentQuickCard({
   const isAvailable = item.status === 'Available';
 
   return (
-    <TouchableOpacity
+    <GlassPressable
       style={styles.card}
       onPress={onPress}
-      activeOpacity={0.88}
+      hapticType="light"
     >
       <View style={styles.topRow}>
         <View style={styles.iconCircle}>
@@ -105,30 +103,34 @@ export default function EquipmentQuickCard({
           </View>
         </View>
 
-        <TouchableOpacity
+        <GlassPressable
           style={styles.bookButton}
           onPress={onBook || onPress}
-          activeOpacity={0.8}
+          hapticType="medium"
         >
           <Text style={styles.bookButtonText}>
             {language === 'hi' ? 'बुक करें' : language === 'en' ? 'Book Now' : 'बुक करा'}
           </Text>
           <Ionicons name="arrow-forward" size={16} color={Colors.textInverse} style={{ marginLeft: 4 }} />
-        </TouchableOpacity>
+        </GlassPressable>
       </View>
-    </TouchableOpacity>
+    </GlassPressable>
   );
 }
 
 const styles = StyleSheet.create({
   card: {
-    backgroundColor: Colors.surface,
+    backgroundColor: 'rgba(255, 255, 255, 0.78)',
     borderRadius: Radii.xxl,
     padding: Spacing.lg,
     marginBottom: Spacing.md,
-    borderWidth: 1,
-    borderColor: Colors.border,
-    ...Shadows.card,
+    borderWidth: 1.2,
+    borderColor: 'rgba(255, 255, 255, 0.85)',
+    shadowColor: '#0F172A',
+    shadowOffset: { width: 0, height: 6 },
+    shadowOpacity: 0.06,
+    shadowRadius: 14,
+    elevation: 3,
   },
   topRow: {
     flexDirection: 'row',

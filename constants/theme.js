@@ -2,41 +2,50 @@
 // Apple HIG Inspired Design System Tokens for Agricultural Ergonomics
 
 export const Colors = {
-  // Brand Greens
-  primary: '#1B5E20',       // Deep Forest Green
-  primaryDark: '#0E3A13',   // Shadow / active state
-  primaryLight: '#2E7D32',  // Secondary green
-  accentGreen: '#43A047',   // Vibrant badge / progress
-  mintTint: '#E8F5E9',      // Soft callout background
-  mintBorder: '#C8E6C9',    // Accent border
+  // Brand Emerald & Ambient Accents
+  primary: '#059669',       // Premium Emerald (clean, modern, high-tech)
+  primaryDark: '#064E3B',   // Deep Forest Emerald
+  primaryLight: '#10B981',  // Radiant Neon Mint
+  accentGreen: '#34D399',   // Bright Mint Glow
+  mintTint: 'rgba(16, 185, 129, 0.12)',      // Translucent callout
+  mintBorder: 'rgba(52, 211, 153, 0.28)',    // Subtle glass border
+  
+  // Luxury Glassmorphic Surfaces (Frosted Glass with Alpha)
+  glassSurface: 'rgba(255, 255, 255, 0.78)',
+  glassSurfaceSubtle: 'rgba(255, 255, 255, 0.55)',
+  glassSurfaceElevated: 'rgba(255, 255, 255, 0.90)',
+  glassBorder: 'rgba(255, 255, 255, 0.75)',
+  glassBorderGlow: 'rgba(16, 185, 129, 0.35)',
+  glassDarkSurface: 'rgba(15, 23, 42, 0.75)',
+  glassDarkBorder: 'rgba(255, 255, 255, 0.12)',
 
-  // Backgrounds & Surfaces
-  background: '#F7F8F7',    // Eye-friendly off-white canvas
-  surface: '#FFFFFF',       // Grouped Inset Card background
+  // Backgrounds & Canvas
+  background: '#F0F3F8',    // Modern luxury cool gray-tinted canvas
+  surface: '#FFFFFF',
   surfaceElevated: '#FFFFFF',
-  surfaceMuted: '#F1F3F2',  // Secondary card / chip bg
+  surfaceMuted: '#F8FAFC',
 
-  // High-contrast Outdoors Typography
-  textPrimary: '#111111',   // Deep Charcoal
-  textSecondary: '#6B7280', // Slate Gray
-  textTertiary: '#9CA3AF',  // Subtle placeholder / inactive
-  textInverse: '#FFFFFF',   // On dark green buttons
+  // High-contrast Outdoor Typography
+  textPrimary: '#0F172A',   // Slate 900
+  textSecondary: '#475569', // Slate 600
+  textTertiary: '#94A3B8',  // Slate 400
+  textInverse: '#FFFFFF',
 
   // Status & Utility Colors
-  success: '#2E7D32',
-  successLight: '#DCFCE7',
+  success: '#10B981',
+  successLight: 'rgba(16, 185, 129, 0.15)',
   warning: '#F59E0B',
-  warningLight: '#FEF3C7',
-  error: '#D32F2F',
-  errorLight: '#FEE2E2',
+  warningLight: 'rgba(245, 158, 11, 0.15)',
+  error: '#EF4444',
+  errorLight: 'rgba(239, 68, 68, 0.15)',
   info: '#0284C7',
-  infoLight: '#E0F2FE',
+  infoLight: 'rgba(2, 132, 199, 0.15)',
 
   // Structural & Lines
-  border: '#E5E7EB',
-  borderDark: '#D1D5DB',
-  divider: '#F3F4F6',
-  overlay: 'rgba(0, 0, 0, 0.45)',
+  border: 'rgba(226, 232, 240, 0.8)',
+  borderDark: '#CBD5E1',
+  divider: 'rgba(241, 245, 249, 0.8)',
+  overlay: 'rgba(15, 23, 42, 0.55)',
 };
 
 export const Spacing = {

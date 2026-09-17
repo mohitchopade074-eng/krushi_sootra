@@ -16,6 +16,7 @@ import { Colors, Radii, Shadows, Spacing, Typography } from '../constants/theme'
 import EquipmentQuickCard from '../components/EquipmentQuickCard';
 import BottomSheet from '../components/ui/BottomSheet';
 import PrimaryButton from '../components/ui/PrimaryButton';
+import GlassPressable from '../components/ui/GlassPressable';
 import { filterByRadius, AGRICULTURAL_LOCATIONS } from '../services/locationService';
 
 const EQUIPMENT_CATEGORIES = {
@@ -368,16 +369,16 @@ export default function EquipmentScreen({
           {categories.map((cat) => {
             const isSelected = selectedCategory === cat.id;
             return (
-              <TouchableOpacity
+              <GlassPressable
                 key={cat.id}
                 style={[styles.pill, isSelected && styles.selectedPill]}
                 onPress={() => setSelectedCategory(cat.id)}
-                activeOpacity={0.8}
+                hapticType="selection"
               >
                 <Text style={[styles.pillText, isSelected && styles.selectedPillText]}>
                   {cat.label}
                 </Text>
-              </TouchableOpacity>
+              </GlassPressable>
             );
           })}
         </ScrollView>
@@ -585,16 +586,24 @@ const styles = StyleSheet.create({
   },
   pill: {
     paddingHorizontal: Spacing.lg,
-    paddingVertical: 7,
+    paddingVertical: 8,
     borderRadius: Radii.pill,
-    backgroundColor: Colors.surfaceMuted,
+    backgroundColor: 'rgba(255, 255, 255, 0.75)',
     marginRight: Spacing.sm,
-    borderWidth: 1,
-    borderColor: Colors.border,
+    borderWidth: 1.2,
+    borderColor: 'rgba(255, 255, 255, 0.85)',
+    shadowColor: '#0F172A',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.04,
+    shadowRadius: 6,
   },
   selectedPill: {
     backgroundColor: Colors.primary,
     borderColor: Colors.primary,
+    shadowColor: Colors.primary,
+    shadowOpacity: 0.28,
+    shadowRadius: 10,
+    elevation: 3,
   },
   pillText: {
     fontSize: Typography.sizes.sm,
@@ -607,7 +616,7 @@ const styles = StyleSheet.create({
   },
   listContent: {
     padding: Spacing.lg,
-    paddingBottom: Spacing.huge,
+    paddingBottom: 110, // Avoid overlap with floating bottom nav
   },
   resultsMetaRow: {
     flexDirection: 'row',

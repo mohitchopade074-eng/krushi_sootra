@@ -15,6 +15,7 @@ import { Colors, Radii, Shadows, Spacing, Typography } from '../constants/theme'
 import StatusBadge from '../components/ui/StatusBadge';
 import BottomSheet from '../components/ui/BottomSheet';
 import PrimaryButton from '../components/ui/PrimaryButton';
+import GlassPressable from '../components/ui/GlassPressable';
 
 const WAREHOUSE_DATA = [
   {
@@ -211,9 +212,10 @@ export default function WarehouseScreen({ language = 'mr', onBookingConfirmed })
 
         {/* Filter Toggle */}
         <View style={styles.filterRow}>
-          <TouchableOpacity
+          <GlassPressable
             style={[styles.filterChip, !onlyColdStorage && styles.filterChipActive]}
             onPress={() => setOnlyColdStorage(false)}
+            hapticType="selection"
           >
             <Text
               style={[
@@ -223,11 +225,12 @@ export default function WarehouseScreen({ language = 'mr', onBookingConfirmed })
             >
               {t.allStorage} ({WAREHOUSE_DATA.length})
             </Text>
-          </TouchableOpacity>
+          </GlassPressable>
 
-          <TouchableOpacity
+          <GlassPressable
             style={[styles.filterChip, onlyColdStorage && styles.filterChipActive]}
             onPress={() => setOnlyColdStorage(true)}
+            hapticType="selection"
           >
             <Ionicons
               name="snow"
@@ -243,7 +246,7 @@ export default function WarehouseScreen({ language = 'mr', onBookingConfirmed })
             >
               {t.coldOnly}
             </Text>
-          </TouchableOpacity>
+          </GlassPressable>
         </View>
       </View>
 
@@ -327,12 +330,13 @@ export default function WarehouseScreen({ language = 'mr', onBookingConfirmed })
                   </Text>
                 </View>
 
-                <TouchableOpacity
+                <GlassPressable
                   style={styles.reserveBtn}
                   onPress={() => openReserve(item)}
+                  hapticType="medium"
                 >
                   <Text style={styles.reserveBtnText}>{t.reserveBtn}</Text>
-                </TouchableOpacity>
+                </GlassPressable>
               </View>
             </View>
           );
@@ -447,14 +451,22 @@ const styles = StyleSheet.create({
     paddingHorizontal: Spacing.md,
     paddingVertical: 7,
     borderRadius: Radii.pill,
-    backgroundColor: Colors.surfaceMuted,
+    backgroundColor: 'rgba(255, 255, 255, 0.75)',
     marginRight: Spacing.sm,
-    borderWidth: 1,
-    borderColor: Colors.border,
+    borderWidth: 1.2,
+    borderColor: 'rgba(255, 255, 255, 0.85)',
+    shadowColor: '#0F172A',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.04,
+    shadowRadius: 6,
   },
   filterChipActive: {
     backgroundColor: Colors.primary,
     borderColor: Colors.primary,
+    shadowColor: Colors.primary,
+    shadowOpacity: 0.28,
+    shadowRadius: 10,
+    elevation: 3,
   },
   filterChipText: {
     fontSize: Typography.sizes.xs,
@@ -463,19 +475,24 @@ const styles = StyleSheet.create({
   },
   filterChipTextActive: {
     color: Colors.textInverse,
+    fontWeight: Typography.weights.bold,
   },
   listContainer: {
     padding: Spacing.lg,
-    paddingBottom: Spacing.huge,
+    paddingBottom: 110, // Dock avoidance
   },
   card: {
-    backgroundColor: Colors.surface,
+    backgroundColor: 'rgba(255, 255, 255, 0.78)',
     borderRadius: Radii.xxl,
     padding: Spacing.lg,
     marginBottom: Spacing.md,
-    borderWidth: 1,
-    borderColor: Colors.border,
-    ...Shadows.card,
+    borderWidth: 1.2,
+    borderColor: 'rgba(255, 255, 255, 0.85)',
+    shadowColor: '#0F172A',
+    shadowOffset: { width: 0, height: 6 },
+    shadowOpacity: 0.06,
+    shadowRadius: 14,
+    elevation: 3,
   },
   cardTop: {
     flexDirection: 'row',

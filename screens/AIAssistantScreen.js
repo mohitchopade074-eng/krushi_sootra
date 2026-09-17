@@ -15,6 +15,7 @@ import {
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { Colors, Radii, Shadows, Spacing, Typography } from '../constants/theme';
+import GlassPressable from '../components/ui/GlassPressable';
 
 const AI_STRINGS = {
   mr: {
@@ -223,14 +224,14 @@ export default function AIAssistantScreen({ language = 'mr' }) {
       <View style={styles.promptsContainer}>
         <ScrollView horizontal showsHorizontalScrollIndicator={false}>
           {t.prompts.map((p, idx) => (
-            <TouchableOpacity
+            <GlassPressable
               key={idx}
               style={styles.promptChip}
               onPress={() => handleSend(p)}
-              activeOpacity={0.8}
+              hapticType="selection"
             >
               <Text style={styles.promptChipText}>{p}</Text>
-            </TouchableOpacity>
+            </GlassPressable>
           ))}
         </ScrollView>
       </View>
@@ -281,13 +282,13 @@ export default function AIAssistantScreen({ language = 'mr' }) {
 
       {/* Input Bar */}
       <View style={styles.inputBar}>
-        <TouchableOpacity
+        <GlassPressable
           style={styles.micButton}
           onPress={handleVoicePrompt}
-          activeOpacity={0.8}
+          hapticType="medium"
         >
           <Ionicons name="mic" size={22} color={Colors.primary} />
-        </TouchableOpacity>
+        </GlassPressable>
 
         <TextInput
           style={styles.input}
@@ -298,14 +299,14 @@ export default function AIAssistantScreen({ language = 'mr' }) {
           multiline
         />
 
-        <TouchableOpacity
+        <GlassPressable
           style={[styles.sendButton, !inputText.trim() && styles.sendButtonDisabled]}
           onPress={() => handleSend()}
           disabled={!inputText.trim()}
-          activeOpacity={0.8}
+          hapticType="medium"
         >
           <Ionicons name="send" size={18} color={Colors.textInverse} />
-        </TouchableOpacity>
+        </GlassPressable>
       </View>
     </KeyboardAvoidingView>
   );
@@ -367,13 +368,17 @@ const styles = StyleSheet.create({
     borderBottomColor: Colors.border,
   },
   promptChip: {
-    backgroundColor: '#F3E8FF',
+    backgroundColor: 'rgba(243, 232, 255, 0.75)',
     paddingHorizontal: Spacing.md,
-    paddingVertical: 6,
+    paddingVertical: 7,
     borderRadius: Radii.pill,
     marginRight: Spacing.sm,
-    borderWidth: 1,
-    borderColor: '#E9D5FF',
+    borderWidth: 1.2,
+    borderColor: 'rgba(233, 213, 255, 0.9)',
+    shadowColor: '#7C3AED',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.06,
+    shadowRadius: 6,
   },
   promptChipText: {
     fontSize: 11,
@@ -395,17 +400,25 @@ const styles = StyleSheet.create({
   },
   userBubble: {
     alignSelf: 'flex-end',
-    backgroundColor: Colors.primary,
+    backgroundColor: Colors.primaryDark,
     borderBottomRightRadius: 4,
-    ...Shadows.subtle,
+    shadowColor: Colors.primary,
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.22,
+    shadowRadius: 10,
+    elevation: 3,
   },
   aiBubble: {
     alignSelf: 'flex-start',
-    backgroundColor: Colors.surface,
+    backgroundColor: 'rgba(255, 255, 255, 0.85)',
     borderBottomLeftRadius: 4,
-    borderWidth: 1,
-    borderColor: Colors.border,
-    ...Shadows.subtle,
+    borderWidth: 1.2,
+    borderColor: 'rgba(255, 255, 255, 0.95)',
+    shadowColor: '#0F172A',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.06,
+    shadowRadius: 10,
+    elevation: 2,
   },
   messageText: {
     fontSize: Typography.sizes.body,
@@ -441,11 +454,11 @@ const styles = StyleSheet.create({
   inputBar: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: Colors.surface,
+    backgroundColor: 'rgba(255, 255, 255, 0.88)',
     paddingHorizontal: Spacing.md,
     paddingVertical: Spacing.sm,
     borderTopWidth: 1,
-    borderTopColor: Colors.border,
+    borderTopColor: 'rgba(226, 232, 240, 0.8)',
   },
   micButton: {
     width: 42,

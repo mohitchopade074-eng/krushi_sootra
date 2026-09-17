@@ -29,6 +29,7 @@ import {
 import WeatherCard from '../components/WeatherCard';
 import EquipmentQuickCard from '../components/EquipmentQuickCard';
 import StatusBadge from '../components/ui/StatusBadge';
+import GlassPressable from '../components/ui/GlassPressable';
 import { filterByRadius, AGRICULTURAL_LOCATIONS, requestDeviceLocation } from '../services/locationService';
 
 // Sample verified regional inventory with pure translations for each language
@@ -200,16 +201,16 @@ export default function FarmerHomeScreen({
           </View>
 
           {/* Language Switcher Pill */}
-          <TouchableOpacity
+          <GlassPressable
             style={styles.langPill}
             onPress={toggleLanguage}
-            activeOpacity={0.8}
+            hapticType="selection"
           >
             <Ionicons name="globe-outline" size={16} color={Colors.primary} />
             <Text style={styles.langText}>
               {language === 'mr' ? 'मराठी' : language === 'hi' ? 'हिंदी' : 'English'}
             </Text>
-          </TouchableOpacity>
+          </GlassPressable>
         </View>
 
         {/* Farmer Profile & Active Location Strip */}
@@ -222,10 +223,13 @@ export default function FarmerHomeScreen({
               <Text style={styles.greetingTitle}>
                 {brand.welcomeUser}
               </Text>
-              <TouchableOpacity
+              <Text style={styles.userStatusText}>
+                {brand.userStatus}
+              </Text>
+              <GlassPressable
                 style={styles.locationSelector}
                 onPress={cycleLocation}
-                activeOpacity={0.7}
+                hapticType="selection"
               >
                 <Ionicons name="location" size={14} color={Colors.primaryLight} />
                 <Text style={styles.locationSelectorText}>
@@ -234,7 +238,7 @@ export default function FarmerHomeScreen({
                     : selectedLocation?.name}
                 </Text>
                 <Text style={styles.locationChangeLink}>({ui.changeLocation})</Text>
-              </TouchableOpacity>
+              </GlassPressable>
             </View>
           </View>
 
@@ -248,10 +252,10 @@ export default function FarmerHomeScreen({
         </View>
 
         {/* AI Krushi Assistant High-Priority Quick-Bar */}
-        <TouchableOpacity
+        <GlassPressable
           style={styles.aiQuickBar}
-          activeOpacity={0.88}
           onPress={() => onNavigateTab && onNavigateTab('lab')}
+          hapticType="medium"
         >
           <View style={styles.aiIconBubble}>
             <Ionicons name="sparkles" size={20} color="#7C3AED" />
@@ -263,7 +267,7 @@ export default function FarmerHomeScreen({
             </Text>
           </View>
           <Ionicons name="chevron-forward" size={20} color={Colors.textTertiary} />
-        </TouchableOpacity>
+        </GlassPressable>
 
         {/* Live Weather & Agro-Advisory Widget (Open-Meteo Integration) */}
         <WeatherCard
@@ -281,11 +285,11 @@ export default function FarmerHomeScreen({
 
         <View style={styles.modulesGrid}>
           {CORE_MODULES_DATA.map((mod) => (
-            <TouchableOpacity
+            <GlassPressable
               key={mod.id}
               style={styles.moduleCard}
               onPress={() => handleModulePress(mod)}
-              activeOpacity={0.85}
+              hapticType="light"
             >
               <View
                 style={[
@@ -315,15 +319,15 @@ export default function FarmerHomeScreen({
                 </View>
                 <Ionicons name="arrow-forward-circle" size={22} color={mod.color} />
               </View>
-            </TouchableOpacity>
+            </GlassPressable>
           ))}
         </View>
 
         {/* Soil Health Scanner Special Banner */}
-        <TouchableOpacity
+        <GlassPressable
           style={styles.soilBanner}
-          activeOpacity={0.88}
           onPress={() => onNavigateTab && onNavigateTab('lab')}
+          hapticType="medium"
         >
           <View style={styles.soilBannerContent}>
             <View style={styles.soilIconBox}>
@@ -342,7 +346,7 @@ export default function FarmerHomeScreen({
             <Text style={styles.soilActionText}>{ui.scanAction}</Text>
             <Ionicons name="camera" size={16} color={Colors.primary} style={{ marginLeft: 4 }} />
           </View>
-        </TouchableOpacity>
+        </GlassPressable>
 
         {/* 20 KM Discovery: Nearby Agricultural Equipment */}
         <View style={styles.sectionHeaderRow}>
@@ -351,11 +355,12 @@ export default function FarmerHomeScreen({
               {ui.nearbyServices}
             </Text>
           </View>
-          <TouchableOpacity
+          <GlassPressable
             onPress={() => onNavigateTab && onNavigateTab('equipment')}
+            hapticType="selection"
           >
             <Text style={styles.viewAllText}>{ui.viewAll}</Text>
-          </TouchableOpacity>
+          </GlassPressable>
         </View>
 
         {/* Nearby Equipment List */}
@@ -396,7 +401,7 @@ const styles = StyleSheet.create({
   contentContainer: {
     paddingHorizontal: Spacing.lg,
     paddingTop: Spacing.md,
-    paddingBottom: Spacing.huge,
+    paddingBottom: 110, // Generous padding for floating glass dock
   },
   topHeader: {
     flexDirection: 'row',
@@ -407,7 +412,7 @@ const styles = StyleSheet.create({
   brandTitle: {
     fontSize: Typography.sizes.headline,
     fontWeight: Typography.weights.heavy,
-    color: Colors.primary,
+    color: Colors.primaryDark,
     letterSpacing: -0.5,
   },
   brandTagline: {
@@ -418,13 +423,17 @@ const styles = StyleSheet.create({
   langPill: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: Colors.surface,
+    backgroundColor: 'rgba(255, 255, 255, 0.85)',
     paddingHorizontal: Spacing.md,
-    paddingVertical: 6,
+    paddingVertical: 7,
     borderRadius: Radii.pill,
-    borderWidth: 1,
-    borderColor: Colors.border,
-    ...Shadows.subtle,
+    borderWidth: 1.2,
+    borderColor: 'rgba(255, 255, 255, 0.9)',
+    shadowColor: '#0F172A',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.06,
+    shadowRadius: 10,
+    elevation: 2,
   },
   langText: {
     fontSize: Typography.sizes.xs,
@@ -436,13 +445,17 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    backgroundColor: Colors.surface,
+    backgroundColor: 'rgba(255, 255, 255, 0.78)',
     padding: Spacing.md,
-    borderRadius: Radii.xl,
+    borderRadius: Radii.xxl,
     marginBottom: Spacing.lg,
-    borderWidth: 1,
-    borderColor: Colors.border,
-    ...Shadows.subtle,
+    borderWidth: 1.2,
+    borderColor: 'rgba(255, 255, 255, 0.85)',
+    shadowColor: '#0F172A',
+    shadowOffset: { width: 0, height: 6 },
+    shadowOpacity: 0.06,
+    shadowRadius: 14,
+    elevation: 3,
   },
   profileInfo: {
     flexDirection: 'row',
@@ -450,26 +463,34 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   avatarCircle: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    backgroundColor: Colors.mintTint,
+    width: 44,
+    height: 44,
+    borderRadius: 22,
+    backgroundColor: 'rgba(16, 185, 129, 0.16)',
     alignItems: 'center',
     justifyContent: 'center',
     marginRight: Spacing.md,
+    borderWidth: 1,
+    borderColor: 'rgba(16, 185, 129, 0.3)',
   },
   greetingGroup: {
     flex: 1,
   },
   greetingTitle: {
     fontSize: Typography.sizes.body,
-    fontWeight: Typography.weights.bold,
+    fontWeight: Typography.weights.heavy,
     color: Colors.textPrimary,
+  },
+  userStatusText: {
+    fontSize: 11,
+    fontWeight: Typography.weights.bold,
+    color: Colors.primary,
+    marginTop: 1,
   },
   locationSelector: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginTop: 2,
+    marginTop: 3,
   },
   locationSelectorText: {
     fontSize: Typography.sizes.xs,
@@ -485,13 +506,17 @@ const styles = StyleSheet.create({
   aiQuickBar: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#F5F3FF',
-    borderRadius: Radii.xl,
+    backgroundColor: 'rgba(245, 243, 255, 0.82)',
+    borderRadius: Radii.xxl,
     padding: Spacing.md,
     marginBottom: Spacing.lg,
-    borderWidth: 1.5,
-    borderColor: '#DDD6FE',
-    ...Shadows.subtle,
+    borderWidth: 1.2,
+    borderColor: 'rgba(221, 214, 254, 0.9)',
+    shadowColor: '#7C3AED',
+    shadowOffset: { width: 0, height: 6 },
+    shadowOpacity: 0.12,
+    shadowRadius: 16,
+    elevation: 4,
   },
   aiIconBubble: {
     width: 38,
@@ -545,15 +570,19 @@ const styles = StyleSheet.create({
   },
   moduleCard: {
     width: '48.5%',
-    backgroundColor: Colors.surface,
-    borderRadius: Radii.xl,
+    backgroundColor: 'rgba(255, 255, 255, 0.78)',
+    borderRadius: Radii.xxl,
     padding: Spacing.md,
     marginBottom: Spacing.md,
-    borderWidth: 1,
-    borderColor: Colors.border,
+    borderWidth: 1.2,
+    borderColor: 'rgba(255, 255, 255, 0.85)',
     justifyContent: 'space-between',
-    minHeight: 148,
-    ...Shadows.subtle,
+    minHeight: 154,
+    shadowColor: '#0F172A',
+    shadowOffset: { width: 0, height: 6 },
+    shadowOpacity: 0.06,
+    shadowRadius: 14,
+    elevation: 3,
   },
   moduleIconBox: {
     width: 48,
@@ -598,13 +627,17 @@ const styles = StyleSheet.create({
     fontWeight: Typography.weights.bold,
   },
   soilBanner: {
-    backgroundColor: '#FEF3C7',
-    borderRadius: Radii.xl,
+    backgroundColor: 'rgba(254, 243, 199, 0.85)',
+    borderRadius: Radii.xxl,
     padding: Spacing.md,
     marginBottom: Spacing.xl,
-    borderWidth: 1.5,
-    borderColor: '#FDE68A',
-    ...Shadows.subtle,
+    borderWidth: 1.2,
+    borderColor: 'rgba(253, 230, 138, 0.9)',
+    shadowColor: '#B45309',
+    shadowOffset: { width: 0, height: 6 },
+    shadowOpacity: 0.08,
+    shadowRadius: 16,
+    elevation: 3,
   },
   soilBannerContent: {
     flexDirection: 'row',

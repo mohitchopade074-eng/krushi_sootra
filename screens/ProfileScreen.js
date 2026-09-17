@@ -7,7 +7,6 @@ import {
   Text,
   StyleSheet,
   ScrollView,
-  TouchableOpacity,
   Alert,
   Linking,
 } from 'react-native';
@@ -16,6 +15,8 @@ import { Colors, Radii, Shadows, Spacing, Typography } from '../constants/theme'
 import { BRANDING, ROLES_DATA, UI_STRINGS } from '../constants/branding';
 import SegmentedControl from '../components/ui/SegmentedControl';
 import StatusBadge from '../components/ui/StatusBadge';
+import GlassCard from '../components/ui/GlassCard';
+import GlassPressable from '../components/ui/GlassPressable';
 
 const PROFILE_TEXTS = {
   mr: {
@@ -88,22 +89,24 @@ export default function ProfileScreen({
       contentContainerStyle={styles.contentContainer}
       showsVerticalScrollIndicator={false}
     >
-      {/* Profile Header */}
-      <View style={styles.profileCard}>
+      {/* Profile Glass Header */}
+      <GlassCard intensity={45} style={styles.profileCard}>
         <View style={styles.avatar}>
-          <Ionicons name="person" size={32} color={Colors.primary} />
+          <Ionicons name="person" size={28} color={Colors.primary} />
         </View>
         <View style={styles.profileDetails}>
           <Text style={styles.farmerName}>{t.userName}</Text>
           <Text style={styles.phoneText}>+91 98220 76543</Text>
           <Text style={styles.villageText}>{t.location}</Text>
         </View>
-      </View>
+      </GlassCard>
 
-      {/* Role Switcher Section */}
-      <View style={styles.sectionCard}>
+      {/* Role Switcher Glass Section */}
+      <GlassCard intensity={30} style={styles.sectionCard}>
         <View style={styles.sectionHeaderRow}>
-          <Ionicons name="swap-horizontal" size={20} color={Colors.primary} />
+          <View style={styles.sectionIconBadge}>
+            <Ionicons name="swap-horizontal" size={18} color={Colors.primary} />
+          </View>
           <Text style={styles.sectionTitle}>{ui.switchRole}</Text>
         </View>
         <Text style={styles.sectionSubtitle}>{ui.switchRoleSub}</Text>
@@ -115,14 +118,15 @@ export default function ProfileScreen({
             const rDesc = r.desc[currentLanguage] || r.desc.mr;
 
             return (
-              <TouchableOpacity
+              <GlassPressable
                 key={r.id}
+                hapticType="selection"
+                scaleTo={0.97}
                 style={[styles.roleItem, isSelected && styles.roleItemActive]}
                 onPress={() => {
                   if (onRoleChange) onRoleChange(r.id);
                   Alert.alert(t.roleChangedTitle, `${t.activeRoleMsg} ${rName}`);
                 }}
-                activeOpacity={0.8}
               >
                 <View style={styles.roleItemLeft}>
                   <View style={styles.roleIconCircle}>
@@ -132,35 +136,39 @@ export default function ProfileScreen({
                       color={isSelected ? Colors.primary : Colors.textTertiary}
                     />
                   </View>
-                  <View>
+                  <View style={styles.roleTextContainer}>
                     <Text style={[styles.roleName, isSelected && styles.roleNameActive]}>
                       {rName}
                     </Text>
                     <Text style={styles.roleDesc}>{rDesc}</Text>
                   </View>
                 </View>
-              </TouchableOpacity>
+              </GlassPressable>
             );
           })}
         </View>
-      </View>
+      </GlassCard>
 
-      {/* Universal Booking Tracker */}
-      <View style={styles.sectionCard}>
+      {/* Universal Booking Tracker Glass Section */}
+      <GlassCard intensity={30} style={styles.sectionCard}>
         <View style={styles.sectionHeaderRow}>
-          <Ionicons name="calendar" size={20} color={Colors.primary} />
+          <View style={styles.sectionIconBadge}>
+            <Ionicons name="calendar" size={18} color={Colors.primary} />
+          </View>
           <Text style={styles.sectionTitle}>{ui.myBookings}</Text>
         </View>
 
-        <SegmentedControl
-          segments={[
-            { label: `${t.allTab} (${bookings.length})` },
-            { label: t.activeTab },
-            { label: t.completedTab },
-          ]}
-          selectedIndex={activeBookingSegment}
-          onChange={(idx) => setActiveBookingSegment(idx)}
-        />
+        <View style={styles.segmentedWrapper}>
+          <SegmentedControl
+            segments={[
+              { label: `${t.allTab} (${bookings.length})` },
+              { label: t.activeTab },
+              { label: t.completedTab },
+            ]}
+            selectedIndex={activeBookingSegment}
+            onChange={(idx) => setActiveBookingSegment(idx)}
+          />
+        </View>
 
         {displayedBookings.length === 0 ? (
           <View style={styles.emptyBookings}>
@@ -187,12 +195,14 @@ export default function ProfileScreen({
             </View>
           ))
         )}
-      </View>
+      </GlassCard>
 
-      {/* Language Selector */}
-      <View style={styles.sectionCard}>
+      {/* Language Selector Glass Section */}
+      <GlassCard intensity={30} style={styles.sectionCard}>
         <View style={styles.sectionHeaderRow}>
-          <Ionicons name="language" size={20} color={Colors.primary} />
+          <View style={styles.sectionIconBadge}>
+            <Ionicons name="language" size={18} color={Colors.primary} />
+          </View>
           <Text style={styles.sectionTitle}>{ui.selectLanguage}</Text>
         </View>
 
@@ -204,36 +214,39 @@ export default function ProfileScreen({
           ].map((l) => {
             const isSelected = currentLanguage === l.id;
             return (
-              <TouchableOpacity
+              <GlassPressable
                 key={l.id}
+                hapticType="selection"
+                scaleTo={0.96}
                 style={[styles.langBtn, isSelected && styles.langBtnActive]}
                 onPress={() => onLanguageChange && onLanguageChange(l.id)}
               >
                 <Text style={[styles.langBtnText, isSelected && styles.langBtnTextActive]}>
                   {l.label}
                 </Text>
-              </TouchableOpacity>
+              </GlassPressable>
             );
           })}
         </View>
-      </View>
+      </GlassCard>
 
-      {/* Emergency Kisan Call Center */}
-      <TouchableOpacity
+      {/* Emergency Kisan Call Center Glass Card */}
+      <GlassPressable
+        hapticType="medium"
+        scaleTo={0.97}
         style={styles.helplineCard}
         onPress={handleCallHelpline}
-        activeOpacity={0.88}
       >
         <View style={styles.helplineIcon}>
-          <Ionicons name="call" size={24} color="#DC2626" />
+          <Ionicons name="call" size={22} color="#DC2626" />
         </View>
         <View style={styles.helplineText}>
           <Text style={styles.helplineTitle}>{ui.helplineTitle}</Text>
           <Text style={styles.helplinePhone}>{ui.helplineNumber}</Text>
           <Text style={styles.helplineSub}>{ui.helplineSub}</Text>
         </View>
-        <Ionicons name="chevron-forward" size={20} color="#DC2626" />
-      </TouchableOpacity>
+        <Ionicons name="chevron-forward" size={18} color="#DC2626" />
+      </GlassPressable>
 
       {/* Version Footer */}
       <View style={styles.versionFooter}>
@@ -251,27 +264,24 @@ const styles = StyleSheet.create({
   },
   contentContainer: {
     padding: Spacing.lg,
-    paddingBottom: Spacing.huge,
+    paddingBottom: 110, // Floating dock clearance
   },
   profileCard: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: Colors.surface,
     padding: Spacing.lg,
     borderRadius: Radii.xxl,
     marginBottom: Spacing.lg,
-    borderWidth: 1,
-    borderColor: Colors.border,
     ...Shadows.card,
   },
   avatar: {
-    width: 60,
-    height: 60,
-    borderRadius: 30,
+    width: 58,
+    height: 58,
+    borderRadius: 29,
     backgroundColor: Colors.mintTint,
     alignItems: 'center',
     justifyContent: 'center',
-    marginRight: Spacing.lg,
+    marginRight: Spacing.md,
     borderWidth: 1.5,
     borderColor: Colors.mintBorder,
   },
@@ -295,18 +305,25 @@ const styles = StyleSheet.create({
     marginTop: 2,
   },
   sectionCard: {
-    backgroundColor: Colors.surface,
     borderRadius: Radii.xxl,
     padding: Spacing.lg,
     marginBottom: Spacing.lg,
-    borderWidth: 1,
-    borderColor: Colors.border,
     ...Shadows.card,
   },
   sectionHeaderRow: {
     flexDirection: 'row',
     alignItems: 'center',
     marginBottom: 4,
+  },
+  sectionIconBadge: {
+    width: 32,
+    height: 32,
+    borderRadius: 16,
+    backgroundColor: Colors.mintTint,
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderWidth: 1,
+    borderColor: Colors.mintBorder,
   },
   sectionTitle: {
     fontSize: Typography.sizes.subtitle,
@@ -327,10 +344,10 @@ const styles = StyleSheet.create({
     paddingVertical: Spacing.md,
     paddingHorizontal: Spacing.md,
     borderRadius: Radii.lg,
-    backgroundColor: Colors.surfaceMuted,
+    backgroundColor: Colors.glassSurfaceElevated,
     marginBottom: Spacing.sm,
-    borderWidth: 1.5,
-    borderColor: Colors.border,
+    borderWidth: 1,
+    borderColor: Colors.glassBorder,
   },
   roleItemActive: {
     backgroundColor: Colors.mintTint,
@@ -342,6 +359,9 @@ const styles = StyleSheet.create({
   },
   roleIconCircle: {
     marginRight: Spacing.md,
+  },
+  roleTextContainer: {
+    flex: 1,
   },
   roleName: {
     fontSize: Typography.sizes.body,
@@ -355,6 +375,9 @@ const styles = StyleSheet.create({
     fontSize: 11,
     color: Colors.textSecondary,
     marginTop: 2,
+  },
+  segmentedWrapper: {
+    marginBottom: Spacing.md,
   },
   emptyBookings: {
     alignItems: 'center',
@@ -373,12 +396,12 @@ const styles = StyleSheet.create({
     marginTop: 2,
   },
   bookingCard: {
-    backgroundColor: Colors.surfaceMuted,
+    backgroundColor: Colors.glassSurfaceElevated,
     borderRadius: Radii.lg,
     padding: Spacing.md,
     marginBottom: Spacing.sm,
     borderWidth: 1,
-    borderColor: Colors.border,
+    borderColor: Colors.glassBorder,
   },
   bookingTopRow: {
     flexDirection: 'row',
@@ -417,13 +440,13 @@ const styles = StyleSheet.create({
   },
   langBtn: {
     flex: 1,
-    paddingVertical: 10,
+    paddingVertical: 12,
     alignItems: 'center',
     justifyContent: 'center',
     borderRadius: Radii.lg,
-    backgroundColor: Colors.surfaceMuted,
-    borderWidth: 1.5,
-    borderColor: Colors.border,
+    backgroundColor: Colors.glassSurfaceElevated,
+    borderWidth: 1,
+    borderColor: Colors.glassBorder,
     marginHorizontal: 4,
   },
   langBtnActive: {
@@ -442,7 +465,7 @@ const styles = StyleSheet.create({
   helplineCard: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#FEF2F2',
+    backgroundColor: 'rgba(254, 242, 242, 0.9)',
     borderRadius: Radii.xxl,
     padding: Spacing.lg,
     borderWidth: 1.5,
@@ -451,9 +474,9 @@ const styles = StyleSheet.create({
     ...Shadows.subtle,
   },
   helplineIcon: {
-    width: 46,
-    height: 46,
-    borderRadius: 23,
+    width: 44,
+    height: 44,
+    borderRadius: 22,
     backgroundColor: '#FEE2E2',
     alignItems: 'center',
     justifyContent: 'center',

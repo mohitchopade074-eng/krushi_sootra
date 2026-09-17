@@ -7,11 +7,13 @@ import {
   Text,
   StyleSheet,
   ActivityIndicator,
-  TouchableOpacity,
+  Platform,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+import { BlurView } from 'expo-blur';
 import { Colors, Radii, Shadows, Spacing, Typography } from '../constants/theme';
 import { fetchLiveWeatherData } from '../services/weatherApi';
+import GlassPressable from './ui/GlassPressable';
 
 const WEATHER_LABELS = {
   mr: {
@@ -137,10 +139,10 @@ export default function WeatherCard({
             </View>
           )}
         </View>
-        <TouchableOpacity
+        <GlassPressable
           onPress={handleRefresh}
           style={styles.refreshButton}
-          activeOpacity={0.7}
+          hapticType="light"
           hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
         >
           <Ionicons
@@ -148,7 +150,7 @@ export default function WeatherCard({
             size={18}
             color={loading ? Colors.textTertiary : Colors.primary}
           />
-        </TouchableOpacity>
+        </GlassPressable>
       </View>
 
       {/* Main Temp & Condition Row */}
@@ -239,13 +241,17 @@ export default function WeatherCard({
 
 const styles = StyleSheet.create({
   card: {
-    backgroundColor: Colors.surface,
+    backgroundColor: 'rgba(255, 255, 255, 0.78)',
     borderRadius: Radii.xxl,
     padding: Spacing.lg,
     marginBottom: Spacing.lg,
-    borderWidth: 1,
-    borderColor: Colors.border,
-    ...Shadows.card,
+    borderWidth: 1.2,
+    borderColor: 'rgba(255, 255, 255, 0.85)',
+    shadowColor: '#0F172A',
+    shadowOffset: { width: 0, height: 8 },
+    shadowOpacity: 0.08,
+    shadowRadius: 18,
+    elevation: 4,
   },
   loadingCard: {
     paddingVertical: Spacing.xxl,
@@ -286,9 +292,11 @@ const styles = StyleSheet.create({
     fontWeight: Typography.weights.bold,
   },
   refreshButton: {
-    padding: 6,
+    padding: 7,
     borderRadius: Radii.pill,
-    backgroundColor: Colors.surfaceMuted,
+    backgroundColor: 'rgba(241, 245, 249, 0.8)',
+    borderWidth: 1,
+    borderColor: 'rgba(255, 255, 255, 0.8)',
   },
   tempRow: {
     flexDirection: 'row',
