@@ -195,9 +195,9 @@ export default function FarmerHomeScreen({
       >
         {/* Top App Header & Branding Bar */}
         <View style={styles.topHeader}>
-          <View>
-            <Text style={styles.brandTitle}>{brand.appName}</Text>
-            <Text style={styles.brandTagline}>{brand.tagline}</Text>
+          <View style={styles.brandTitleGroup}>
+            <Text style={styles.brandTitle} numberOfLines={1}>{brand.appName}</Text>
+            <Text style={styles.brandTagline} numberOfLines={1}>{brand.tagline}</Text>
           </View>
 
           {/* Language Switcher Pill */}
@@ -206,7 +206,7 @@ export default function FarmerHomeScreen({
             onPress={toggleLanguage}
             hapticType="selection"
           >
-            <Ionicons name="globe-outline" size={16} color={Colors.primary} />
+            <Ionicons name="globe-outline" size={15} color={Colors.primary} />
             <Text style={styles.langText}>
               {language === 'mr' ? 'मराठी' : language === 'hi' ? 'हिंदी' : 'English'}
             </Text>
@@ -220,10 +220,10 @@ export default function FarmerHomeScreen({
               <Ionicons name="person" size={20} color={Colors.primary} />
             </View>
             <View style={styles.greetingGroup}>
-              <Text style={styles.greetingTitle}>
+              <Text style={styles.greetingTitle} numberOfLines={1}>
                 {brand.welcomeUser}
               </Text>
-              <Text style={styles.userStatusText}>
+              <Text style={styles.userStatusText} numberOfLines={1}>
                 {brand.userStatus}
               </Text>
               <GlassPressable
@@ -231,8 +231,8 @@ export default function FarmerHomeScreen({
                 onPress={cycleLocation}
                 hapticType="selection"
               >
-                <Ionicons name="location" size={14} color={Colors.primaryLight} />
-                <Text style={styles.locationSelectorText}>
+                <Ionicons name="location" size={13} color={Colors.primaryLight} />
+                <Text style={styles.locationSelectorText} numberOfLines={1}>
                   {typeof selectedLocation?.name === 'object'
                     ? selectedLocation.name[language] || selectedLocation.name.mr || selectedLocation.name.en
                     : selectedLocation?.name}
@@ -258,15 +258,15 @@ export default function FarmerHomeScreen({
           hapticType="medium"
         >
           <View style={styles.aiIconBubble}>
-            <Ionicons name="sparkles" size={20} color="#7C3AED" />
+            <Ionicons name="sparkles" size={18} color="#7C3AED" />
           </View>
           <View style={styles.aiTextContainer}>
-            <Text style={styles.aiTitle}>{ui.aiBannerTitle}</Text>
-            <Text style={styles.aiSubtitle}>
+            <Text style={styles.aiTitle} numberOfLines={1}>{ui.aiBannerTitle}</Text>
+            <Text style={styles.aiSubtitle} numberOfLines={2}>
               {ui.aiBannerSub}
             </Text>
           </View>
-          <Ionicons name="chevron-forward" size={20} color={Colors.textTertiary} />
+          <Ionicons name="chevron-forward" size={18} color={Colors.textTertiary} style={{ marginLeft: 4 }} />
         </GlassPressable>
 
         {/* Live Weather & Agro-Advisory Widget (Open-Meteo Integration) */}
@@ -406,8 +406,12 @@ const styles = StyleSheet.create({
   topHeader: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    alignItems: 'flex-start',
-    marginBottom: Spacing.lg,
+    alignItems: 'center',
+    marginBottom: Spacing.md,
+  },
+  brandTitleGroup: {
+    flex: 1,
+    marginRight: Spacing.sm,
   },
   brandTitle: {
     fontSize: Typography.sizes.headline,
@@ -448,7 +452,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(255, 255, 255, 0.78)',
     padding: Spacing.md,
     borderRadius: Radii.xxl,
-    marginBottom: Spacing.lg,
+    marginBottom: Spacing.md,
     borderWidth: 1.2,
     borderColor: 'rgba(255, 255, 255, 0.85)',
     shadowColor: '#0F172A',
@@ -461,6 +465,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     flex: 1,
+    marginRight: Spacing.xs,
   },
   avatarCircle: {
     width: 44,
@@ -497,6 +502,7 @@ const styles = StyleSheet.create({
     fontWeight: Typography.weights.semibold,
     color: Colors.primaryLight,
     marginLeft: 2,
+    maxWidth: 110,
   },
   locationChangeLink: {
     fontSize: Typography.sizes.xs,
@@ -509,7 +515,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(245, 243, 255, 0.82)',
     borderRadius: Radii.xxl,
     padding: Spacing.md,
-    marginBottom: Spacing.lg,
+    marginBottom: Spacing.md,
     borderWidth: 1.2,
     borderColor: 'rgba(221, 214, 254, 0.9)',
     shadowColor: '#7C3AED',
@@ -566,18 +572,18 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     flexWrap: 'wrap',
     justifyContent: 'space-between',
-    marginBottom: Spacing.lg,
+    marginBottom: Spacing.md,
   },
   moduleCard: {
     width: '48.5%',
     backgroundColor: 'rgba(255, 255, 255, 0.78)',
     borderRadius: Radii.xxl,
-    padding: Spacing.md,
+    padding: 13,
     marginBottom: Spacing.md,
     borderWidth: 1.2,
     borderColor: 'rgba(255, 255, 255, 0.85)',
     justifyContent: 'space-between',
-    minHeight: 154,
+    minHeight: 162,
     shadowColor: '#0F172A',
     shadowOffset: { width: 0, height: 6 },
     shadowOpacity: 0.06,
@@ -585,12 +591,12 @@ const styles = StyleSheet.create({
     elevation: 3,
   },
   moduleIconBox: {
-    width: 48,
-    height: 48,
+    width: 44,
+    height: 44,
     borderRadius: Radii.lg,
     alignItems: 'center',
     justifyContent: 'center',
-    marginBottom: Spacing.sm,
+    marginBottom: Spacing.xs,
   },
   moduleTextGroup: {
     flex: 1,
@@ -600,15 +606,16 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   moduleTitle: {
-    fontSize: Typography.sizes.body,
+    fontSize: 13.5,
     fontWeight: Typography.weights.bold,
     color: Colors.textPrimary,
+    lineHeight: 18,
   },
   moduleSubtitle: {
-    fontSize: 11,
+    fontSize: 10.5,
     color: Colors.textSecondary,
-    lineHeight: 15,
-    marginTop: 2,
+    lineHeight: 14,
+    marginTop: 3,
   },
   moduleFooterRow: {
     flexDirection: 'row',
@@ -619,8 +626,9 @@ const styles = StyleSheet.create({
   moduleBadge: {
     borderWidth: 1,
     borderRadius: Radii.pill,
-    paddingHorizontal: 6,
+    paddingHorizontal: 7,
     paddingVertical: 2,
+    maxWidth: '75%',
   },
   moduleBadgeText: {
     fontSize: 10,
@@ -630,7 +638,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(254, 243, 199, 0.85)',
     borderRadius: Radii.xxl,
     padding: Spacing.md,
-    marginBottom: Spacing.xl,
+    marginBottom: Spacing.lg,
     borderWidth: 1.2,
     borderColor: 'rgba(253, 230, 138, 0.9)',
     shadowColor: '#B45309',

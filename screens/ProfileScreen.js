@@ -95,9 +95,9 @@ export default function ProfileScreen({
           <Ionicons name="person" size={28} color={Colors.primary} />
         </View>
         <View style={styles.profileDetails}>
-          <Text style={styles.farmerName}>{t.userName}</Text>
-          <Text style={styles.phoneText}>+91 98220 76543</Text>
-          <Text style={styles.villageText}>{t.location}</Text>
+          <Text style={styles.farmerName} numberOfLines={1}>{t.userName}</Text>
+          <Text style={styles.phoneText} numberOfLines={1}>+91 98220 76543</Text>
+          <Text style={styles.villageText} numberOfLines={1}>{t.location}</Text>
         </View>
       </GlassCard>
 
@@ -137,10 +137,10 @@ export default function ProfileScreen({
                     />
                   </View>
                   <View style={styles.roleTextContainer}>
-                    <Text style={[styles.roleName, isSelected && styles.roleNameActive]}>
+                    <Text style={[styles.roleName, isSelected && styles.roleNameActive]} numberOfLines={1}>
                       {rName}
                     </Text>
-                    <Text style={styles.roleDesc}>{rDesc}</Text>
+                    <Text style={styles.roleDesc} numberOfLines={2}>{rDesc}</Text>
                   </View>
                 </View>
               </GlassPressable>

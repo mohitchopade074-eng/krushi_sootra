@@ -389,8 +389,8 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   messagesContent: {
-    padding: Spacing.lg,
-    paddingBottom: Spacing.xl,
+    padding: Spacing.md,
+    paddingBottom: 110,
   },
   messageBubble: {
     maxWidth: '85%',

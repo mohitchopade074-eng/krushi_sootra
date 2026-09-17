@@ -256,11 +256,11 @@ export default function KisanLabScreen({ language = 'mr' }) {
               <View style={styles.nutrientsGrid}>
                 {/* Nitrogen */}
                 <View style={styles.nutrientBox}>
-                  <Text style={styles.nutrientLabel}>{t.nitrogen}</Text>
+                  <Text style={styles.nutrientLabel} numberOfLines={1}>{t.nitrogen}</Text>
                   <Text style={styles.nutrientVal}>185</Text>
-                  <Text style={styles.nutrientUnit}>{t.unitKgHa}</Text>
+                  <Text style={styles.nutrientUnit} numberOfLines={1}>{t.unitKgHa}</Text>
                   <View style={[styles.statusPill, { backgroundColor: '#FEE2E2' }]}>
-                    <Text style={[styles.statusPillText, { color: '#EF4444' }]}>
+                    <Text style={[styles.statusPillText, { color: '#EF4444' }]} numberOfLines={1}>
                       {t.statusLow}
                     </Text>
                   </View>
@@ -268,11 +268,11 @@ export default function KisanLabScreen({ language = 'mr' }) {
 
                 {/* Phosphorus */}
                 <View style={styles.nutrientBox}>
-                  <Text style={styles.nutrientLabel}>{t.phosphorus}</Text>
+                  <Text style={styles.nutrientLabel} numberOfLines={1}>{t.phosphorus}</Text>
                   <Text style={styles.nutrientVal}>24</Text>
-                  <Text style={styles.nutrientUnit}>{t.unitKgHa}</Text>
+                  <Text style={styles.nutrientUnit} numberOfLines={1}>{t.unitKgHa}</Text>
                   <View style={[styles.statusPill, { backgroundColor: '#FEF3C7' }]}>
-                    <Text style={[styles.statusPillText, { color: '#D97706' }]}>
+                    <Text style={[styles.statusPillText, { color: '#D97706' }]} numberOfLines={1}>
                       {t.statusMed}
                     </Text>
                   </View>
@@ -280,11 +280,11 @@ export default function KisanLabScreen({ language = 'mr' }) {
 
                 {/* Potassium */}
                 <View style={styles.nutrientBox}>
-                  <Text style={styles.nutrientLabel}>{t.potassium}</Text>
+                  <Text style={styles.nutrientLabel} numberOfLines={1}>{t.potassium}</Text>
                   <Text style={styles.nutrientVal}>310</Text>
-                  <Text style={styles.nutrientUnit}>{t.unitKgHa}</Text>
+                  <Text style={styles.nutrientUnit} numberOfLines={1}>{t.unitKgHa}</Text>
                   <View style={[styles.statusPill, { backgroundColor: '#DCFCE7' }]}>
-                    <Text style={[styles.statusPillText, { color: '#15803D' }]}>
+                    <Text style={[styles.statusPillText, { color: '#15803D' }]} numberOfLines={1}>
                       {t.statusHigh}
                     </Text>
                   </View>
@@ -335,9 +335,9 @@ export default function KisanLabScreen({ language = 'mr' }) {
             {/* Diagnostic Report */}
             <View style={styles.resultsCard}>
               <View style={styles.diseaseHeader}>
-                <View>
-                  <Text style={styles.cropTitle}>{t.cropName}</Text>
-                  <Text style={styles.diseaseName}>{t.diseaseName}</Text>
+                <View style={styles.diseaseTitleGroup}>
+                  <Text style={styles.cropTitle} numberOfLines={1}>{t.cropName}</Text>
+                  <Text style={styles.diseaseName} numberOfLines={1}>{t.diseaseName}</Text>
                 </View>
                 <View style={styles.confidenceChip}>
                   <Text style={styles.confidenceText}>{t.accuracy}</Text>
@@ -448,7 +448,7 @@ const styles = StyleSheet.create({
   resultsCard: {
     backgroundColor: 'rgba(255, 255, 255, 0.78)',
     borderRadius: Radii.xxl,
-    padding: Spacing.lg,
+    padding: Spacing.md,
     borderWidth: 1.2,
     borderColor: 'rgba(255, 255, 255, 0.85)',
     shadowColor: '#0F172A',
@@ -488,30 +488,31 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: Colors.surfaceMuted,
     borderRadius: Radii.lg,
-    padding: Spacing.md,
+    padding: 8,
+    paddingVertical: 10,
     alignItems: 'center',
-    marginHorizontal: 4,
+    marginHorizontal: 3,
   },
   nutrientLabel: {
-    fontSize: Typography.sizes.xs,
+    fontSize: 11,
     fontWeight: Typography.weights.semibold,
     color: Colors.textSecondary,
   },
   nutrientVal: {
-    fontSize: Typography.sizes.headline,
+    fontSize: 18,
     fontWeight: Typography.weights.heavy,
     color: Colors.textPrimary,
     marginTop: 2,
   },
   nutrientUnit: {
-    fontSize: 10,
+    fontSize: 9.5,
     color: Colors.textSecondary,
   },
   statusPill: {
     borderRadius: Radii.pill,
     paddingHorizontal: 6,
     paddingVertical: 2,
-    marginTop: 6,
+    marginTop: 5,
   },
   statusPillText: {
     fontSize: 9,
@@ -566,13 +567,17 @@ const styles = StyleSheet.create({
     alignItems: 'flex-start',
     marginBottom: Spacing.md,
   },
+  diseaseTitleGroup: {
+    flex: 1,
+    marginRight: Spacing.sm,
+  },
   cropTitle: {
     fontSize: Typography.sizes.xs,
     fontWeight: Typography.weights.semibold,
     color: Colors.textSecondary,
   },
   diseaseName: {
-    fontSize: Typography.sizes.title,
+    fontSize: 16,
     fontWeight: Typography.weights.heavy,
     color: '#B91C1C',
     marginTop: 2,
@@ -582,6 +587,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 8,
     paddingVertical: 4,
     borderRadius: Radii.pill,
+    flexShrink: 0,
   },
   confidenceText: {
     fontSize: 11,

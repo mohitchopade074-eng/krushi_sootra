@@ -57,7 +57,7 @@ export default function EquipmentQuickCard({
       {/* Meta Information: Distance, Rating, Location */}
       <View style={styles.metaRow}>
         <View style={styles.metaItem}>
-          <Ionicons name="navigate-outline" size={14} color={Colors.primaryLight} />
+          <Ionicons name="navigate-outline" size={13} color={Colors.primaryLight} />
           <Text style={styles.distanceText}>
             {formatDistance(item.distanceKm, language)}
           </Text>
@@ -66,7 +66,7 @@ export default function EquipmentQuickCard({
         <View style={styles.metaDot} />
 
         <View style={styles.metaItem}>
-          <Ionicons name="star" size={14} color={Colors.warning} />
+          <Ionicons name="star" size={13} color={Colors.warning} />
           <Text style={styles.ratingText}>
             {item.rating || '4.8'} ({item.reviewCount || 12})
           </Text>
@@ -74,8 +74,8 @@ export default function EquipmentQuickCard({
 
         <View style={styles.metaDot} />
 
-        <View style={styles.metaItem}>
-          <Ionicons name="location-outline" size={14} color={Colors.textSecondary} />
+        <View style={[styles.metaItem, styles.metaLocation]}>
+          <Ionicons name="location-outline" size={13} color={Colors.textSecondary} />
           <Text style={styles.locationText} numberOfLines={1}>
             {typeof item.village === 'object'
               ? item.village[language] || item.village.mr || item.village.en
@@ -86,7 +86,7 @@ export default function EquipmentQuickCard({
 
       {/* Pricing and Action Footer */}
       <View style={styles.footerRow}>
-        <View>
+        <View style={styles.priceContainer}>
           <Text style={styles.priceLabel}>
             {language === 'hi' ? 'किराया दर' : language === 'en' ? 'Rental Rate' : 'भाडे दर'}
           </Text>
@@ -96,7 +96,7 @@ export default function EquipmentQuickCard({
               {language === 'hi' ? '/दिन' : language === 'en' ? '/day' : '/दिवस'}
             </Text>
             {item.acrePrice && (
-              <Text style={styles.subPrice}>
+              <Text style={styles.subPrice} numberOfLines={1}>
                 (₹{item.acrePrice}{language === 'hi' ? '/एकड़' : language === 'en' ? '/acre' : '/एकर'})
               </Text>
             )}
@@ -111,7 +111,7 @@ export default function EquipmentQuickCard({
           <Text style={styles.bookButtonText}>
             {language === 'hi' ? 'बुक करें' : language === 'en' ? 'Book Now' : 'बुक करा'}
           </Text>
-          <Ionicons name="arrow-forward" size={16} color={Colors.textInverse} style={{ marginLeft: 4 }} />
+          <Ionicons name="arrow-forward" size={14} color={Colors.textInverse} style={{ marginLeft: 4 }} />
         </GlassPressable>
       </View>
     </GlassPressable>
@@ -122,7 +122,7 @@ const styles = StyleSheet.create({
   card: {
     backgroundColor: 'rgba(255, 255, 255, 0.78)',
     borderRadius: Radii.xxl,
-    padding: Spacing.lg,
+    padding: Spacing.md,
     marginBottom: Spacing.md,
     borderWidth: 1.2,
     borderColor: 'rgba(255, 255, 255, 0.85)',
@@ -137,8 +137,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   iconCircle: {
-    width: 44,
-    height: 44,
+    width: 42,
+    height: 42,
     borderRadius: Radii.xl,
     backgroundColor: Colors.mintTint,
     alignItems: 'center',
@@ -147,99 +147,110 @@ const styles = StyleSheet.create({
   },
   headerInfo: {
     flex: 1,
+    marginRight: Spacing.xs,
   },
   titleRow: {
     flexDirection: 'row',
     alignItems: 'center',
   },
   title: {
-    fontSize: Typography.sizes.subtitle,
+    fontSize: 15,
     fontWeight: Typography.weights.bold,
     color: Colors.textPrimary,
   },
   modelSubtitle: {
-    fontSize: Typography.sizes.sm,
+    fontSize: 11,
     color: Colors.textSecondary,
     marginTop: 2,
   },
   divider: {
     height: 1,
     backgroundColor: Colors.divider,
-    marginVertical: Spacing.md,
+    marginVertical: Spacing.sm,
   },
   metaRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: Spacing.md,
+    marginBottom: Spacing.sm,
   },
   metaItem: {
     flexDirection: 'row',
     alignItems: 'center',
+  },
+  metaLocation: {
+    flex: 1,
   },
   metaDot: {
     width: 3,
     height: 3,
     borderRadius: 2,
     backgroundColor: Colors.borderDark,
-    marginHorizontal: Spacing.sm,
+    marginHorizontal: 6,
   },
   distanceText: {
-    fontSize: Typography.sizes.sm,
+    fontSize: 11,
     fontWeight: Typography.weights.bold,
     color: Colors.primaryLight,
-    marginLeft: 4,
+    marginLeft: 3,
   },
   ratingText: {
-    fontSize: Typography.sizes.sm,
+    fontSize: 11,
     fontWeight: Typography.weights.semibold,
     color: Colors.textPrimary,
-    marginLeft: 4,
+    marginLeft: 3,
   },
   locationText: {
-    fontSize: Typography.sizes.sm,
+    fontSize: 11,
     color: Colors.textSecondary,
-    marginLeft: 4,
+    marginLeft: 3,
+    flexShrink: 1,
   },
   footerRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
   },
+  priceContainer: {
+    flex: 1,
+    marginRight: Spacing.sm,
+  },
   priceLabel: {
-    fontSize: Typography.sizes.xs,
+    fontSize: 10,
     color: Colors.textSecondary,
   },
   priceRow: {
     flexDirection: 'row',
     alignItems: 'baseline',
+    flexWrap: 'nowrap',
   },
   priceValue: {
-    fontSize: Typography.sizes.headline,
+    fontSize: 19,
     fontWeight: Typography.weights.heavy,
     color: Colors.primary,
   },
   priceUnit: {
-    fontSize: Typography.sizes.xs,
+    fontSize: 11,
     color: Colors.textSecondary,
     marginLeft: 2,
   },
   subPrice: {
-    fontSize: Typography.sizes.xs,
+    fontSize: 10,
     color: Colors.textSecondary,
-    marginLeft: 6,
+    marginLeft: 4,
+    flexShrink: 1,
   },
   bookButton: {
     backgroundColor: Colors.primary,
     flexDirection: 'row',
     alignItems: 'center',
-    paddingHorizontal: Spacing.lg,
-    paddingVertical: 10,
-    borderRadius: Radii.xl,
+    paddingHorizontal: Spacing.md,
+    paddingVertical: 8,
+    borderRadius: Radii.lg,
     ...Shadows.subtle,
   },
   bookButtonText: {
     color: Colors.textInverse,
-    fontSize: Typography.sizes.body,
+    fontSize: 13,
     fontWeight: Typography.weights.bold,
   },
 });

@@ -279,15 +279,15 @@ export default function LabourScreen({ language = 'mr', onBookingConfirmed }) {
                   </View>
                   <View style={styles.headerText}>
                     <View style={styles.nameRow}>
-                      <Text style={styles.name}>{labName}</Text>
+                      <Text style={styles.name} numberOfLines={1}>{labName}</Text>
                       <Ionicons
                         name="checkmark-circle"
-                        size={16}
+                        size={15}
                         color={Colors.primaryLight}
                         style={{ marginLeft: 4 }}
                       />
                     </View>
-                    <Text style={styles.villageText}>
+                    <Text style={styles.villageText} numberOfLines={1}>
                       📍 {labVillage} • {lab.experienceYears} {t.yearsExperience}
                     </Text>
                   </View>
@@ -352,9 +352,9 @@ export default function LabourScreen({ language = 'mr', onBookingConfirmed }) {
                   </View>
                   <View style={styles.headerText}>
                     <View style={styles.nameRow}>
-                      <Text style={styles.name}>{leaderName}</Text>
+                      <Text style={styles.name} numberOfLines={1}>{leaderName}</Text>
                     </View>
-                    <Text style={styles.villageText}>
+                    <Text style={styles.villageText} numberOfLines={1}>
                       📍 {teamVillage} • {team.teamSize} {t.workersTeam}
                     </Text>
                   </View>
@@ -545,7 +545,7 @@ const styles = StyleSheet.create({
   card: {
     backgroundColor: 'rgba(255, 255, 255, 0.78)',
     borderRadius: Radii.xxl,
-    padding: Spacing.lg,
+    padding: Spacing.md,
     marginBottom: Spacing.md,
     borderWidth: 1.2,
     borderColor: 'rgba(255, 255, 255, 0.85)',
@@ -560,8 +560,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   avatar: {
-    width: 44,
-    height: 44,
+    width: 42,
+    height: 42,
     borderRadius: Radii.xl,
     backgroundColor: Colors.mintTint,
     alignItems: 'center',
@@ -570,13 +570,14 @@ const styles = StyleSheet.create({
   },
   headerText: {
     flex: 1,
+    marginRight: Spacing.xs,
   },
   nameRow: {
     flexDirection: 'row',
     alignItems: 'center',
   },
   name: {
-    fontSize: Typography.sizes.subtitle,
+    fontSize: 15,
     fontWeight: Typography.weights.bold,
     color: Colors.textPrimary,
   },
@@ -588,14 +589,14 @@ const styles = StyleSheet.create({
   skillsWrapper: {
     flexDirection: 'row',
     flexWrap: 'wrap',
-    marginTop: Spacing.md,
-    marginBottom: Spacing.md,
+    marginTop: Spacing.sm,
+    marginBottom: Spacing.sm,
   },
   skillPill: {
     backgroundColor: Colors.mintTint,
     borderRadius: Radii.pill,
-    paddingHorizontal: 10,
-    paddingVertical: 4,
+    paddingHorizontal: 9,
+    paddingVertical: 3,
     marginRight: 6,
     marginBottom: 6,
     borderWidth: 1,
@@ -612,14 +613,14 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     borderTopWidth: 1,
     borderTopColor: Colors.divider,
-    paddingTop: Spacing.md,
+    paddingTop: Spacing.sm,
   },
   rateLabel: {
     fontSize: Typography.sizes.xs,
     color: Colors.textSecondary,
   },
   rateValue: {
-    fontSize: Typography.sizes.title,
+    fontSize: 18,
     fontWeight: Typography.weights.heavy,
     color: Colors.primary,
   },
@@ -632,8 +633,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   callBtn: {
-    width: 42,
-    height: 42,
+    width: 40,
+    height: 40,
     borderRadius: Radii.lg,
     backgroundColor: Colors.mintTint,
     alignItems: 'center',
@@ -644,9 +645,9 @@ const styles = StyleSheet.create({
   },
   bookBtn: {
     backgroundColor: Colors.primary,
-    paddingHorizontal: Spacing.lg,
-    paddingVertical: 10,
-    borderRadius: Radii.xl,
+    paddingHorizontal: Spacing.md,
+    paddingVertical: 8,
+    borderRadius: Radii.lg,
     ...Shadows.subtle,
   },
   bookBtnText: {

@@ -276,8 +276,8 @@ export default function WarehouseScreen({ language = 'mr', onBookingConfirmed })
                 </View>
 
                 <View style={styles.cardMainInfo}>
-                  <Text style={styles.name}>{name}</Text>
-                  <Text style={styles.location}>📍 {village}</Text>
+                  <Text style={styles.name} numberOfLines={1}>{name}</Text>
+                  <Text style={styles.location} numberOfLines={1}>📍 {village}</Text>
                 </View>
 
                 <StatusBadge
@@ -484,7 +484,7 @@ const styles = StyleSheet.create({
   card: {
     backgroundColor: 'rgba(255, 255, 255, 0.78)',
     borderRadius: Radii.xxl,
-    padding: Spacing.lg,
+    padding: Spacing.md,
     marginBottom: Spacing.md,
     borderWidth: 1.2,
     borderColor: 'rgba(255, 255, 255, 0.85)',
@@ -499,8 +499,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   iconBox: {
-    width: 44,
-    height: 44,
+    width: 42,
+    height: 42,
     borderRadius: Radii.xl,
     alignItems: 'center',
     justifyContent: 'center',
@@ -508,9 +508,10 @@ const styles = StyleSheet.create({
   },
   cardMainInfo: {
     flex: 1,
+    marginRight: Spacing.xs,
   },
   name: {
-    fontSize: Typography.sizes.subtitle,
+    fontSize: 15,
     fontWeight: Typography.weights.bold,
     color: Colors.textPrimary,
   },
@@ -522,8 +523,8 @@ const styles = StyleSheet.create({
   specStrip: {
     flexDirection: 'row',
     flexWrap: 'wrap',
-    marginTop: Spacing.md,
-    marginBottom: Spacing.sm,
+    marginTop: Spacing.sm,
+    marginBottom: Spacing.xs,
   },
   specBadge: {
     flexDirection: 'row',
@@ -544,7 +545,7 @@ const styles = StyleSheet.create({
   cropsRow: {
     flexDirection: 'row',
     flexWrap: 'wrap',
-    marginBottom: Spacing.md,
+    marginBottom: Spacing.sm,
   },
   cropsLabel: {
     fontSize: 11,
@@ -561,14 +562,14 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     borderTopWidth: 1,
     borderTopColor: Colors.divider,
-    paddingTop: Spacing.md,
+    paddingTop: Spacing.sm,
   },
   priceSub: {
     fontSize: Typography.sizes.xs,
     color: Colors.textSecondary,
   },
   price: {
-    fontSize: Typography.sizes.title,
+    fontSize: 18,
     fontWeight: Typography.weights.heavy,
     color: Colors.primary,
   },
@@ -578,9 +579,9 @@ const styles = StyleSheet.create({
   },
   reserveBtn: {
     backgroundColor: Colors.primary,
-    paddingHorizontal: Spacing.lg,
-    paddingVertical: 10,
-    borderRadius: Radii.xl,
+    paddingHorizontal: Spacing.md,
+    paddingVertical: 8,
+    borderRadius: Radii.lg,
     ...Shadows.subtle,
   },
   reserveBtnText: {

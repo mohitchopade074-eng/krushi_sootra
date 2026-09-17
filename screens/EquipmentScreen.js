@@ -615,7 +615,7 @@ const styles = StyleSheet.create({
     fontWeight: Typography.weights.bold,
   },
   listContent: {
-    padding: Spacing.lg,
+    padding: Spacing.md,
     paddingBottom: 110, // Avoid overlap with floating bottom nav
   },
   resultsMetaRow: {

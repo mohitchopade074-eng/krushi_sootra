@@ -4,13 +4,13 @@
 import React from 'react';
 import { View, StyleSheet, Platform } from 'react-native';
 import { BlurView } from 'expo-blur';
-import { Colors, Radii, Shadows } from '../../constants/theme';
+import { Colors, Radii } from '../../constants/theme';
 import GlassPressable from './GlassPressable';
 
 export default function GlassCard({
   children,
   style,
-  intensity = 60,
+  intensity = 50,
   tint = 'light',
   onPress,
   borderGlow = false,
@@ -24,40 +24,25 @@ export default function GlassCard({
     style,
   ];
 
-  const content = (
-    <View style={styles.innerContent}>
-      {children}
-    </View>
+  const backgroundLayer = !isWeb ? (
+    <BlurView intensity={intensity} tint={tint} style={StyleSheet.absoluteFillObject} />
+  ) : (
+    <View style={[StyleSheet.absoluteFillObject, styles.webFallbackContainer]} />
   );
 
-  // For interactive cards, wrap with physics-based GlassPressable
   if (onPress) {
     return (
-      <GlassPressable onPress={onPress} style={containerStyle} {...props}>
-        {!isWeb ? (
-          <BlurView intensity={intensity} tint={tint} style={styles.blurContainer}>
-            {content}
-          </BlurView>
-        ) : (
-          <View style={styles.webFallbackContainer}>
-            {content}
-          </View>
-        )}
+      <GlassPressable style={containerStyle} onPress={onPress} {...props}>
+        {backgroundLayer}
+        {children}
       </GlassPressable>
     );
   }
 
   return (
     <View style={containerStyle} {...props}>
-      {!isWeb ? (
-        <BlurView intensity={intensity} tint={tint} style={styles.blurContainer}>
-          {content}
-        </BlurView>
-      ) : (
-        <View style={styles.webFallbackContainer}>
-          {content}
-        </View>
-      )}
+      {backgroundLayer}
+      {children}
     </View>
   );
 }
@@ -74,6 +59,7 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.07,
     shadowRadius: 16,
     elevation: 4,
+    position: 'relative',
   },
   cardGlow: {
     borderColor: Colors.glassBorderGlow,
@@ -81,15 +67,8 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.15,
     shadowRadius: 20,
   },
-  blurContainer: {
-    width: '100%',
-    height: '100%',
-  },
   webFallbackContainer: {
-    backgroundColor: 'rgba(255, 255, 255, 0.72)',
+    backgroundColor: 'rgba(255, 255, 255, 0.75)',
     backdropFilter: 'blur(20px)',
-  },
-  innerContent: {
-    width: '100%',
   },
 });

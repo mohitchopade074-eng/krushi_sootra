@@ -31,9 +31,15 @@ export default function SegmentedControl({
   const count = segments.length || 1;
   const pillWidthPercent = 100 / count;
 
+  const inputRange = segments.length > 1 ? segments.map((_, i) => i) : [0, 1];
+  const outputRange =
+    segments.length > 1
+      ? segments.map((_, i) => `${i * pillWidthPercent}%`)
+      : ['0%', '100%'];
+
   const leftInterpolation = animatedIndex.interpolate({
-    inputRange: segments.map((_, i) => i),
-    outputRange: segments.map((_, i) => `${i * pillWidthPercent}%`),
+    inputRange,
+    outputRange,
   });
 
   return (
@@ -64,6 +70,7 @@ export default function SegmentedControl({
                 isSelected && styles.selectedSegmentText,
               ]}
               numberOfLines={1}
+              ellipsizeMode="tail"
             >
               {segment.label || segment}
             </Text>
@@ -77,24 +84,24 @@ export default function SegmentedControl({
 const styles = StyleSheet.create({
   track: {
     flexDirection: 'row',
-    backgroundColor: 'rgba(226, 232, 240, 0.65)',
+    backgroundColor: 'rgba(226, 232, 240, 0.7)',
     borderRadius: Radii.pill,
-    padding: 3,
+    padding: 2.5,
     marginBottom: Spacing.md,
     borderWidth: 1,
-    borderColor: 'rgba(255, 255, 255, 0.7)',
+    borderColor: 'rgba(255, 255, 255, 0.8)',
     position: 'relative',
-    height: 44,
+    height: 42,
     alignItems: 'center',
   },
   slidingPill: {
     position: 'absolute',
-    top: 3,
-    bottom: 3,
+    top: 2.5,
+    bottom: 2.5,
     backgroundColor: Colors.surface,
     borderRadius: Radii.pill,
     borderWidth: 1,
-    borderColor: 'rgba(255, 255, 255, 0.9)',
+    borderColor: 'rgba(255, 255, 255, 0.95)',
     ...Shadows.card,
     elevation: 3,
   },
@@ -104,14 +111,15 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     zIndex: 2,
+    paddingHorizontal: 4,
   },
   segmentText: {
-    fontSize: Typography.sizes.sm,
+    fontSize: 12,
     fontWeight: Typography.weights.medium,
     color: Colors.textSecondary,
   },
   selectedSegmentText: {
-    color: Colors.textPrimary,
+    color: Colors.primaryDark,
     fontWeight: Typography.weights.bold,
   },
 });

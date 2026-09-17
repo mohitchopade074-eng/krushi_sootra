@@ -128,7 +128,7 @@ export default function WeatherCard({
       <View style={styles.headerRow}>
         <View style={styles.locationContainer}>
           <Ionicons name="location" size={16} color={Colors.primary} />
-          <Text style={styles.locationText}>
+          <Text style={styles.locationText} numberOfLines={1}>
             {typeof locationName === 'object'
               ? locationName[language] || locationName.mr || locationName.en
               : locationName}
@@ -158,10 +158,10 @@ export default function WeatherCard({
         <View style={styles.tempGroup}>
           <Text style={styles.temperature}>{current?.temperature ?? '--'}°</Text>
           <View style={styles.tempDetails}>
-            <Text style={styles.conditionText}>
+            <Text style={styles.conditionText} numberOfLines={1}>
               {current?.conditionName ?? t.defaultCondition}
             </Text>
-            <Text style={styles.feelsLikeText}>
+            <Text style={styles.feelsLikeText} numberOfLines={1}>
               {t.feelsLike}
               {current?.apparentTemperature ?? '--'}°C
             </Text>
@@ -171,7 +171,7 @@ export default function WeatherCard({
         <View style={styles.weatherIconBubble}>
           <Ionicons
             name={current?.icon || 'sunny'}
-            size={40}
+            size={32}
             color={Colors.primary}
           />
         </View>
@@ -181,8 +181,8 @@ export default function WeatherCard({
       <View style={styles.metricsContainer}>
         <View style={styles.metricItem}>
           <Ionicons name="water-outline" size={16} color={Colors.info} />
-          <Text style={styles.metricLabel}>{t.rain}</Text>
-          <Text style={styles.metricValue}>
+          <Text style={styles.metricLabel} numberOfLines={1}>{t.rain}</Text>
+          <Text style={styles.metricValue} numberOfLines={1}>
             {advisory?.rainProb ?? 0}%
           </Text>
         </View>
@@ -191,8 +191,8 @@ export default function WeatherCard({
 
         <View style={styles.metricItem}>
           <Ionicons name="speedometer-outline" size={16} color={Colors.primaryLight} />
-          <Text style={styles.metricLabel}>{t.wind}</Text>
-          <Text style={styles.metricValue}>
+          <Text style={styles.metricLabel} numberOfLines={1}>{t.wind}</Text>
+          <Text style={styles.metricValue} numberOfLines={1}>
             {current?.windSpeed ?? 0} km/h
           </Text>
         </View>
@@ -201,8 +201,8 @@ export default function WeatherCard({
 
         <View style={styles.metricItem}>
           <Ionicons name="cloud-outline" size={16} color={Colors.textSecondary} />
-          <Text style={styles.metricLabel}>{t.humidity}</Text>
-          <Text style={styles.metricValue}>
+          <Text style={styles.metricLabel} numberOfLines={1}>{t.humidity}</Text>
+          <Text style={styles.metricValue} numberOfLines={1}>
             {current?.humidity ?? 0}%
           </Text>
         </View>
@@ -226,7 +226,7 @@ export default function WeatherCard({
               color={advTheme.iconColor}
               style={{ marginRight: Spacing.xs }}
             />
-            <Text style={[styles.advisoryTitle, { color: advTheme.text }]}>
+            <Text style={[styles.advisoryTitle, { color: advTheme.text }]} numberOfLines={1}>
               {advisory.title}
             </Text>
           </View>
@@ -243,18 +243,18 @@ const styles = StyleSheet.create({
   card: {
     backgroundColor: 'rgba(255, 255, 255, 0.78)',
     borderRadius: Radii.xxl,
-    padding: Spacing.lg,
-    marginBottom: Spacing.lg,
+    padding: Spacing.md,
+    marginBottom: Spacing.md,
     borderWidth: 1.2,
     borderColor: 'rgba(255, 255, 255, 0.85)',
     shadowColor: '#0F172A',
-    shadowOffset: { width: 0, height: 8 },
-    shadowOpacity: 0.08,
-    shadowRadius: 18,
-    elevation: 4,
+    shadowOffset: { width: 0, height: 6 },
+    shadowOpacity: 0.06,
+    shadowRadius: 14,
+    elevation: 3,
   },
   loadingCard: {
-    paddingVertical: Spacing.xxl,
+    paddingVertical: Spacing.xl,
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -267,17 +267,20 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginBottom: Spacing.sm,
+    marginBottom: Spacing.xs,
   },
   locationContainer: {
     flexDirection: 'row',
     alignItems: 'center',
+    flex: 1,
+    marginRight: Spacing.sm,
   },
   locationText: {
     fontSize: Typography.sizes.body,
     fontWeight: Typography.weights.bold,
     color: Colors.textPrimary,
     marginLeft: 4,
+    flexShrink: 1,
   },
   offlineChip: {
     backgroundColor: Colors.warningLight,
@@ -285,6 +288,7 @@ const styles = StyleSheet.create({
     paddingVertical: 2,
     borderRadius: Radii.sm,
     marginLeft: Spacing.sm,
+    flexShrink: 0,
   },
   offlineChipText: {
     fontSize: 10,
@@ -307,30 +311,33 @@ const styles = StyleSheet.create({
   tempGroup: {
     flexDirection: 'row',
     alignItems: 'center',
+    flex: 1,
+    marginRight: Spacing.sm,
   },
   temperature: {
-    fontSize: 48,
+    fontSize: 38,
     fontWeight: Typography.weights.heavy,
     color: Colors.textPrimary,
     letterSpacing: -1,
   },
   tempDetails: {
-    marginLeft: Spacing.md,
+    marginLeft: Spacing.sm,
+    flex: 1,
   },
   conditionText: {
-    fontSize: Typography.sizes.title,
+    fontSize: 15,
     fontWeight: Typography.weights.bold,
     color: Colors.primaryDark,
   },
   feelsLikeText: {
-    fontSize: Typography.sizes.xs,
+    fontSize: 11,
     color: Colors.textSecondary,
     marginTop: 2,
   },
   weatherIconBubble: {
-    width: 64,
-    height: 64,
-    borderRadius: Radii.xl,
+    width: 50,
+    height: 50,
+    borderRadius: 25,
     backgroundColor: Colors.mintTint,
     alignItems: 'center',
     justifyContent: 'center',
@@ -341,21 +348,22 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     backgroundColor: Colors.surfaceMuted,
     borderRadius: Radii.lg,
-    paddingVertical: Spacing.md,
-    marginTop: Spacing.md,
-    marginBottom: Spacing.md,
+    paddingVertical: Spacing.sm,
+    marginTop: Spacing.sm,
+    marginBottom: Spacing.sm,
   },
   metricItem: {
     flex: 1,
     alignItems: 'center',
+    paddingHorizontal: 2,
   },
   metricLabel: {
-    fontSize: Typography.sizes.xs,
+    fontSize: 11,
     color: Colors.textSecondary,
     marginTop: 2,
   },
   metricValue: {
-    fontSize: Typography.sizes.body,
+    fontSize: 13,
     fontWeight: Typography.weights.bold,
     color: Colors.textPrimary,
     marginTop: 2,
@@ -368,7 +376,7 @@ const styles = StyleSheet.create({
   },
   advisoryBanner: {
     borderRadius: Radii.lg,
-    padding: Spacing.md,
+    padding: 12,
     borderWidth: 1.5,
   },
   advisoryHeader: {
@@ -379,10 +387,11 @@ const styles = StyleSheet.create({
   advisoryTitle: {
     fontSize: Typography.sizes.body,
     fontWeight: Typography.weights.bold,
+    flex: 1,
   },
   advisoryMessage: {
-    fontSize: Typography.sizes.sm,
-    lineHeight: 19,
+    fontSize: 12,
+    lineHeight: 17,
     fontWeight: Typography.weights.medium,
   },
 });
