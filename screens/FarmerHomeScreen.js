@@ -1,3 +1,6 @@
+// KRUSHI-SOOTRA (कृषी-सूत्र / कृषि-सूत्र)
+// Farmer Home Dashboard Screen (100% Isolated Multilingual UI)
+
 import React, { useState, useMemo, useEffect } from 'react';
 import {
   View,
@@ -18,77 +21,91 @@ import {
   Typography,
 } from '../constants/theme';
 import {
-  APP_NAME,
-  APP_NAME_DEVANAGARI,
-  APP_TAGLINE,
-  CORE_MODULES,
-  ROLES,
-  STRINGS,
+  BRANDING,
+  CORE_MODULES_DATA,
+  ROLES_DATA,
+  UI_STRINGS,
 } from '../constants/branding';
 import WeatherCard from '../components/WeatherCard';
 import EquipmentQuickCard from '../components/EquipmentQuickCard';
 import StatusBadge from '../components/ui/StatusBadge';
 import { filterByRadius, AGRICULTURAL_LOCATIONS, requestDeviceLocation } from '../services/locationService';
 
-// Sample verified agricultural inventory situated near Pune / Maharashtra
+// Sample verified regional inventory with pure translations for each language
 const MOCK_NEARBY_EQUIPMENT = [
   {
     id: 'eq_1',
-    name: 'महिंद्रा ५७५ DI ट्रॅक्टर (45 HP)',
+    name: {
+      mr: 'महिंद्रा ५७५ डीआय ट्रॅक्टर',
+      hi: 'महिंद्रा ५७५ डीआई ट्रैक्टर',
+      en: 'Mahindra 575 DI Tractor',
+    },
     brand: 'Mahindra',
-    model: '575 DI Bhoomiputra',
+    model: '575 DI (45 HP)',
     category: 'Tractor',
     dailyPrice: 1800,
     acrePrice: 900,
     status: 'Available',
     latitude: 18.5300,
     longitude: 73.8700,
-    village: 'हवेली, पुणे',
+    village: { mr: 'हवेली, पुणे', hi: 'हवेली, पुणे', en: 'Haveli, Pune' },
     rating: 4.9,
     reviewCount: 38,
   },
   {
     id: 'eq_2',
-    name: 'शक्तीमान रोटाव्हेटर (७ फूट)',
+    name: {
+      mr: 'शक्तीमान रोटाव्हेटर (७ फूट)',
+      hi: 'शक्तिमान रोटावेटर (७ फीट)',
+      en: 'Shaktiman Rotavator (7 ft)',
+    },
     brand: 'Shaktiman',
-    model: 'Champion Semi-Champion',
+    model: 'Champion 7ft',
     category: 'Rotavator',
     dailyPrice: 1100,
     acrePrice: 550,
     status: 'Available',
     latitude: 18.5600,
     longitude: 73.8100,
-    village: 'मांजरी, पुणे',
+    village: { mr: 'मांजरी, पुणे', hi: 'मांजरी, पुणे', en: 'Manjari, Pune' },
     rating: 4.8,
     reviewCount: 22,
   },
   {
     id: 'eq_3',
-    name: 'हाय-टेक कृषी ड्रोन (फवारणी)',
+    name: {
+      mr: 'हाय-टेक कृषी फवारणी ड्रोन',
+      hi: 'हाई-टेक कृषि छिड़काव ड्रोन',
+      en: 'Hi-Tech Agri Spraying Drone',
+    },
     brand: 'IoTech',
-    model: 'AgroBot 16L Tank',
+    model: 'AgroBot 16L',
     category: 'Drone',
     dailyPrice: 3500,
     acrePrice: 400,
     status: 'Available',
     latitude: 18.4900,
     longitude: 73.9100,
-    village: 'हडपसर, पुणे',
+    village: { mr: 'हडपसर, पुणे', hi: 'हड़पसर, पुणे', en: 'Hadapsar, Pune' },
     rating: 5.0,
     reviewCount: 16,
   },
   {
     id: 'eq_4',
-    name: 'लेझर लँड लेव्हलर (जमीन सपाटीकरण)',
+    name: {
+      mr: 'लेझर जमीन सपाटीकरण यंत्र',
+      hi: 'लेजर भूमि समतलीकरण यंत्र',
+      en: 'Laser Land Leveler Pro',
+    },
     brand: 'Gahir',
-    model: 'Laser Level Pro',
+    model: 'Level Pro',
     category: 'Leveler',
     dailyPrice: 2200,
     acrePrice: 1100,
     status: 'In Use',
     latitude: 18.6200,
     longitude: 73.7900,
-    village: 'पिंपरी, पुणे',
+    village: { mr: 'पिंपरी, पुणे', hi: 'पिंपरी, पुणे', en: 'Pimpri, Pune' },
     rating: 4.7,
     reviewCount: 19,
   },
@@ -102,7 +119,9 @@ export default function FarmerHomeScreen({
 }) {
   const [selectedLocation, setSelectedLocation] = useState(AGRICULTURAL_LOCATIONS.PUNE);
 
-  const strings = STRINGS[language] || STRINGS.mr;
+  const brand = BRANDING[language] || BRANDING.mr;
+  const ui = UI_STRINGS[language] || UI_STRINGS.mr;
+  const farmerRole = ROLES_DATA.farmer.name[language] || ROLES_DATA.farmer.name.mr;
 
   // Auto-request live device GPS on startup
   useEffect(() => {
@@ -156,40 +175,12 @@ export default function FarmerHomeScreen({
   };
 
   const cycleLocation = async () => {
-    // Check if user wants live GPS or predefined hub
-    Alert.alert(
-      'शेताचे स्थान निवडा',
-      'स्थान कसे अपडेट करायचे आहे?',
-      [
-        {
-          text: 'माझे थेट GPS स्थान (Live GPS)',
-          onPress: async () => {
-            const res = await requestDeviceLocation();
-            if (res.success) {
-              setSelectedLocation({
-                name: res.placeName,
-                lat: res.latitude,
-                lon: res.longitude,
-              });
-            } else {
-              Alert.alert('माहिती', 'GPS परवानगी उपलब्ध नाही.');
-            }
-          },
-        },
-        {
-          text: 'पुढील कृषी जिल्हा निवडा',
-          onPress: () => {
-            const locKeys = Object.keys(AGRICULTURAL_LOCATIONS);
-            const currentIndex = locKeys.findIndex(
-              (k) => AGRICULTURAL_LOCATIONS[k].name === selectedLocation.name
-            );
-            const nextKey = locKeys[(currentIndex + 1) % locKeys.length];
-            setSelectedLocation(AGRICULTURAL_LOCATIONS[nextKey]);
-          },
-        },
-        { text: 'रद्द करा', style: 'cancel' },
-      ]
+    const locKeys = Object.keys(AGRICULTURAL_LOCATIONS);
+    const currentIndex = locKeys.findIndex(
+      (k) => AGRICULTURAL_LOCATIONS[k].lat === selectedLocation.lat
     );
+    const nextKey = locKeys[(currentIndex + 1) % locKeys.length];
+    setSelectedLocation(AGRICULTURAL_LOCATIONS[nextKey]);
   };
 
   return (
@@ -204,13 +195,8 @@ export default function FarmerHomeScreen({
         {/* Top App Header & Branding Bar */}
         <View style={styles.topHeader}>
           <View>
-            <View style={styles.brandBadgeRow}>
-              <Text style={styles.brandTitle}>{APP_NAME}</Text>
-              <View style={styles.devanagariTag}>
-                <Text style={styles.devanagariText}>{APP_NAME_DEVANAGARI}</Text>
-              </View>
-            </View>
-            <Text style={styles.brandTagline}>{APP_TAGLINE}</Text>
+            <Text style={styles.brandTitle}>{brand.appName}</Text>
+            <Text style={styles.brandTagline}>{brand.tagline}</Text>
           </View>
 
           {/* Language Switcher Pill */}
@@ -234,7 +220,7 @@ export default function FarmerHomeScreen({
             </View>
             <View style={styles.greetingGroup}>
               <Text style={styles.greetingTitle}>
-                {strings.welcome}, शेतकरी मित्र!
+                {brand.welcomeUser}
               </Text>
               <TouchableOpacity
                 style={styles.locationSelector}
@@ -243,16 +229,18 @@ export default function FarmerHomeScreen({
               >
                 <Ionicons name="location" size={14} color={Colors.primaryLight} />
                 <Text style={styles.locationSelectorText}>
-                  {selectedLocation.name}
+                  {typeof selectedLocation?.name === 'object'
+                    ? selectedLocation.name[language] || selectedLocation.name.mr || selectedLocation.name.en
+                    : selectedLocation?.name}
                 </Text>
-                <Text style={styles.locationChangeLink}>({strings.changeLocation})</Text>
+                <Text style={styles.locationChangeLink}>({ui.changeLocation})</Text>
               </TouchableOpacity>
             </View>
           </View>
 
           {/* Active Role Badge */}
           <StatusBadge
-            label={ROLES.FARMER.marathi}
+            label={farmerRole}
             status="success"
             icon="leaf"
             size="small"
@@ -263,15 +251,15 @@ export default function FarmerHomeScreen({
         <TouchableOpacity
           style={styles.aiQuickBar}
           activeOpacity={0.88}
-          onPress={() => onNavigateTab ? onNavigateTab('lab') : null}
+          onPress={() => onNavigateTab && onNavigateTab('lab')}
         >
           <View style={styles.aiIconBubble}>
             <Ionicons name="sparkles" size={20} color="#7C3AED" />
           </View>
           <View style={styles.aiTextContainer}>
-            <Text style={styles.aiTitle}>AI कृषी सल्लागार (AI Krushi Assistant)</Text>
+            <Text style={styles.aiTitle}>{ui.aiBannerTitle}</Text>
             <Text style={styles.aiSubtitle}>
-              शेतीतील कोणताही प्रश्न विचारा, झटपट मार्गदर्शन मिळवा
+              {ui.aiBannerSub}
             </Text>
           </View>
           <Ionicons name="chevron-forward" size={20} color={Colors.textTertiary} />
@@ -287,12 +275,12 @@ export default function FarmerHomeScreen({
 
         {/* 5 Core Platform Modules Grid */}
         <View style={styles.sectionHeaderRow}>
-          <Text style={styles.sectionTitle}>कृषी सेवा केंद्र (Core Services)</Text>
-          <Text style={styles.sectionSubtitle}>एकाच छताखाली शेतीची सर्व साधने</Text>
+          <Text style={styles.sectionTitle}>{ui.coreServicesTitle}</Text>
+          <Text style={styles.sectionSubtitle}>{ui.coreServicesSub}</Text>
         </View>
 
         <View style={styles.modulesGrid}>
-          {CORE_MODULES.map((mod) => (
+          {CORE_MODULES_DATA.map((mod) => (
             <TouchableOpacity
               key={mod.id}
               style={styles.moduleCard}
@@ -311,18 +299,18 @@ export default function FarmerHomeScreen({
               <View style={styles.moduleTextGroup}>
                 <View style={styles.moduleTitleRow}>
                   <Text style={styles.moduleTitle} numberOfLines={1}>
-                    {language === 'mr' ? mod.titleMr : mod.titleEn}
+                    {mod.title[language] || mod.title.mr}
                   </Text>
                 </View>
                 <Text style={styles.moduleSubtitle} numberOfLines={2}>
-                  {mod.subtitleMr}
+                  {mod.subtitle[language] || mod.subtitle.mr}
                 </Text>
               </View>
 
               <View style={styles.moduleFooterRow}>
                 <View style={[styles.moduleBadge, { borderColor: `${mod.color}40` }]}>
                   <Text style={[styles.moduleBadgeText, { color: mod.color }]}>
-                    {mod.badge}
+                    {mod.badge[language] || mod.badge.mr}
                   </Text>
                 </View>
                 <Ionicons name="arrow-forward-circle" size={22} color={mod.color} />
@@ -335,7 +323,7 @@ export default function FarmerHomeScreen({
         <TouchableOpacity
           style={styles.soilBanner}
           activeOpacity={0.88}
-          onPress={() => onNavigateTab ? onNavigateTab('lab') : null}
+          onPress={() => onNavigateTab && onNavigateTab('lab')}
         >
           <View style={styles.soilBannerContent}>
             <View style={styles.soilIconBox}>
@@ -343,15 +331,15 @@ export default function FarmerHomeScreen({
             </View>
             <View style={styles.soilTextGroup}>
               <Text style={styles.soilBannerTitle}>
-                माती आरोग्य पत्रिका स्कॅन करा (Soil OCR)
+                {ui.soilBannerTitle}
               </Text>
               <Text style={styles.soilBannerDesc}>
-                Tesseract OCR द्वारे नत्र (N), स्फुरद (P), पालाश (K) व pH चे झटपट वाचन
+                {ui.soilBannerDesc}
               </Text>
             </View>
           </View>
           <View style={styles.soilBannerAction}>
-            <Text style={styles.soilActionText}>स्कॅन करा</Text>
+            <Text style={styles.soilActionText}>{ui.scanAction}</Text>
             <Ionicons name="camera" size={16} color={Colors.primary} style={{ marginLeft: 4 }} />
           </View>
         </TouchableOpacity>
@@ -360,16 +348,13 @@ export default function FarmerHomeScreen({
         <View style={styles.sectionHeaderRow}>
           <View>
             <Text style={styles.sectionTitle}>
-              {strings.nearbyServices}
-            </Text>
-            <Text style={styles.sectionSubtitle}>
-              Haversine सूत्रानुसार २० किमी परिसरात सत्यापित साधने
+              {ui.nearbyServices}
             </Text>
           </View>
           <TouchableOpacity
-            onPress={() => onNavigateTab ? onNavigateTab('equipment') : null}
+            onPress={() => onNavigateTab && onNavigateTab('equipment')}
           >
-            <Text style={styles.viewAllText}>{strings.viewAll}</Text>
+            <Text style={styles.viewAllText}>{ui.viewAll}</Text>
           </TouchableOpacity>
         </View>
 
@@ -377,7 +362,11 @@ export default function FarmerHomeScreen({
         {nearbyItems.map((item) => (
           <EquipmentQuickCard
             key={item.id}
-            item={item}
+            item={{
+              ...item,
+              name: typeof item.name === 'object' ? item.name[language] : item.name,
+              village: typeof item.village === 'object' ? item.village[language] : item.village,
+            }}
             language={language}
             onBook={() => handleBookEquipmentItem(item)}
             onPress={() => handleBookEquipmentItem(item)}
@@ -386,9 +375,9 @@ export default function FarmerHomeScreen({
 
         {/* Footer info strip */}
         <View style={styles.footerBrandBlock}>
-          <Text style={styles.footerBrandText}>{APP_NAME} • {APP_NAME_DEVANAGARI}</Text>
+          <Text style={styles.footerBrandText}>{brand.appName}</Text>
           <Text style={styles.footerCopyright}>
-            शेतकरी, अवजार मालक व मजुरांचे एकात्मिक डिजिटल व्यासपीठ
+            {brand.footerSub}
           </Text>
         </View>
       </ScrollView>
@@ -415,29 +404,11 @@ const styles = StyleSheet.create({
     alignItems: 'flex-start',
     marginBottom: Spacing.lg,
   },
-  brandBadgeRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
   brandTitle: {
     fontSize: Typography.sizes.headline,
     fontWeight: Typography.weights.heavy,
     color: Colors.primary,
     letterSpacing: -0.5,
-  },
-  devanagariTag: {
-    backgroundColor: Colors.mintTint,
-    paddingHorizontal: 8,
-    paddingVertical: 2,
-    borderRadius: Radii.sm,
-    marginLeft: Spacing.sm,
-    borderWidth: 1,
-    borderColor: Colors.mintBorder,
-  },
-  devanagariText: {
-    fontSize: Typography.sizes.xs,
-    fontWeight: Typography.weights.bold,
-    color: Colors.primaryDark,
   },
   brandTagline: {
     fontSize: Typography.sizes.xs,

@@ -1,5 +1,5 @@
-// KRUSHI-SOOTRA (कृषी-सूत्र)
-// Warehouse & Cold Storage Space Reservation Screen
+// KRUSHI-SOOTRA (कृषी-सूत्र / कृषि-सूत्र)
+// Warehouse & Cold Storage Reservation Screen (100% Pure Multilingual)
 
 import React, { useState } from 'react';
 import {
@@ -8,7 +8,6 @@ import {
   StyleSheet,
   ScrollView,
   TouchableOpacity,
-  TextInput,
   Alert,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
@@ -20,58 +19,147 @@ import PrimaryButton from '../components/ui/PrimaryButton';
 const WAREHOUSE_DATA = [
   {
     id: 'wh_1',
-    name: 'सह्याद्री ॲग्रो कोल्ड स्टोरेज व पॅकहाऊस',
-    type: 'Cold Storage',
+    name: {
+      mr: 'सह्याद्री ॲग्रो शीतगृह व पॅकहाऊस',
+      hi: 'सह्याद्री एग्रो कोल्ड स्टोरेज व पैकहाउस',
+      en: 'Sahyadri Agro Cold Storage & Packhouse',
+    },
     isColdStorage: true,
-    tempRange: '-2°C ते 4°C',
+    tempRange: '-2°C to 4°C',
     capacityTons: 1500,
     availableTons: 420,
     pricePerTonMonth: 650,
-    village: 'हवेली, पुणे',
-    ownerName: 'अशोकराव पवार',
+    village: { mr: 'हवेली, पुणे', hi: 'हवेली, पुणे', en: 'Haveli, Pune' },
+    ownerName: { mr: 'अशोकराव पवार', hi: 'अशोकराव पवार', en: 'Ashokrao Pawar' },
     phone: '+91 98224 88776',
     cctv: true,
     insured: true,
-    suitableFor: ['द्राक्षे', 'डाळिंब', 'कांदा', 'भाजीपाला', 'सफरचंद'],
+    suitableFor: {
+      mr: ['द्राक्षे', 'डाळिंब', 'कांदा', 'भाजीपाला', 'सफरचंद'],
+      hi: ['अंगूर', 'अनार', 'प्याज', 'सब्जियां', 'सेब'],
+      en: ['Grapes', 'Pomegranates', 'Onions', 'Vegetables', 'Apples'],
+    },
   },
   {
     id: 'wh_2',
-    name: 'किसान समृद्धी धान्य व डाळ वेअरहाऊस',
-    type: 'Dry Warehouse',
+    name: {
+      mr: 'किसान समृद्धी धान्य व डाळ गोदाम',
+      hi: 'किसान समृद्धि अनाज एवं दाल गोदाम',
+      en: 'Kisan Samriddhi Grain & Pulses Warehouse',
+    },
     isColdStorage: false,
     capacityTons: 3000,
     availableTons: 1100,
     pricePerTonMonth: 280,
-    village: 'शिक्रापूर, पुणे',
-    ownerName: 'तानाजी जगताप',
+    village: { mr: 'शिक्रापूर, पुणे', hi: 'शिक्रापुर, पुणे', en: 'Shikrapur, Pune' },
+    ownerName: { mr: 'तानाजी जगताप', hi: 'तानाजी जगताप', en: 'Tanaji Jagtap' },
     phone: '+91 98225 33445',
     cctv: true,
     insured: true,
-    suitableFor: ['सोयाबीन', 'गहू', 'हरभरा', 'तूर', 'मका'],
+    suitableFor: {
+      mr: ['सोयाबीन', 'गहू', 'हरभरा', 'तूर', 'मका'],
+      hi: ['सोयाबीन', 'गेहूं', 'चना', 'अरहर', 'मक्का'],
+      en: ['Soybeans', 'Wheat', 'Chickpeas', 'Pigeon Peas', 'Maize'],
+    },
   },
   {
     id: 'wh_3',
-    name: 'श्री गणेश आधुनिक कांदा चाळ व साठवणूक',
-    type: 'Ventilated Onion Storage',
+    name: {
+      mr: 'श्री गणेश आधुनिक कांदा चाळ',
+      hi: 'श्री गणेश आधुनिक प्याज भंडारण गृह',
+      en: 'Shree Ganesh Modern Onion Storage Facility',
+    },
     isColdStorage: false,
     capacityTons: 800,
     availableTons: 250,
     pricePerTonMonth: 320,
-    village: 'चाकण, पुणे',
-    ownerName: 'रमेश खेडकर',
+    village: { mr: 'चाकण, पुणे', hi: 'चाकन, पुणे', en: 'Chakan, Pune' },
+    ownerName: { mr: 'रमेश खेडकर', hi: 'रमेश खेडकर', en: 'Ramesh Khedkar' },
     phone: '+91 98226 55667',
     cctv: true,
     insured: false,
-    suitableFor: ['लाल कांदा', 'उन्हाळी कांदा', 'लसूण'],
+    suitableFor: {
+      mr: ['लाल कांदा', 'उन्हाळी कांदा', 'लसूण'],
+      hi: ['लाल प्याज', 'गर्मी का प्याज', 'लहसुन'],
+      en: ['Red Onions', 'Summer Onions', 'Garlic'],
+    },
   },
 ];
 
-export default function WarehouseScreen({ onBookingConfirmed }) {
+const WAREHOUSE_TEXTS = {
+  mr: {
+    title: 'गोदाम व शीतगृह साठवणूक',
+    subtitle: 'हमीभाव मिळेपर्यंत धान्य व फळे सुरक्षित ठेवा',
+    allStorage: 'सर्व साठवणूक',
+    coldOnly: 'फक्त शीतगृह',
+    spaceAvailable: 'टन मोकळे',
+    cctvBadge: 'CCTV सुरक्षित',
+    insuredBadge: 'विमा संरक्षित',
+    suitableCrops: 'योग्य पिके: ',
+    rateLabel: 'साठवणूक दर:',
+    perTonMonth: '/टन/महिना',
+    reserveBtn: 'जागा आरक्षित करा',
+    capacityTonsLabel: 'साठवणूक क्षमता (टन मध्ये):',
+    durationMonthsLabel: 'कालावधी (महिने):',
+    tonsSuffix: 'टन',
+    monthsSuffix: 'महिने',
+    estRent: 'अंदाजे एकूण भाडे रक्कम:',
+    confirmBtn: 'जागा निश्चित करा',
+    successTitle: 'जागा आरक्षण निश्चित!',
+    phoneContact: 'मालकाशी संपर्क:',
+  },
+  hi: {
+    title: 'गोदाम और कोल्ड स्टोरेज भंडारण',
+    subtitle: 'उचित मूल्य मिलने तक अनाज और फल सुरक्षित रखें',
+    allStorage: 'सभी भंडारण',
+    coldOnly: 'केवल कोल्ड स्टोरेज',
+    spaceAvailable: 'टन रिक्त',
+    cctvBadge: 'CCTV सुरक्षित',
+    insuredBadge: 'बीमा सुरक्षित',
+    suitableCrops: 'अनुकूल फसलें: ',
+    rateLabel: 'भंडारण दर:',
+    perTonMonth: '/टन/माह',
+    reserveBtn: 'स्थान आरक्षित करें',
+    capacityTonsLabel: 'भंडारण क्षमता (टन में):',
+    durationMonthsLabel: 'अवधि (माह):',
+    tonsSuffix: 'टन',
+    monthsSuffix: 'माह',
+    estRent: 'अनुमानित कुल किराया राशि:',
+    confirmBtn: 'स्थान पक्का करें',
+    successTitle: 'स्थान आरक्षण सफल!',
+    phoneContact: 'मालिक से संपर्क:',
+  },
+  en: {
+    title: 'Warehouse & Cold Storage Facilities',
+    subtitle: 'Safeguard grains and fresh produce until optimal market price',
+    allStorage: 'All Facilities',
+    coldOnly: 'Cold Storage Only',
+    spaceAvailable: 'tons available',
+    cctvBadge: 'CCTV Secured',
+    insuredBadge: 'Insured Facility',
+    suitableCrops: 'Suitable Crops: ',
+    rateLabel: 'Storage Rate:',
+    perTonMonth: '/ton/month',
+    reserveBtn: 'Reserve Space',
+    capacityTonsLabel: 'Required Capacity (Tons):',
+    durationMonthsLabel: 'Storage Duration (Months):',
+    tonsSuffix: 'Tons',
+    monthsSuffix: 'Months',
+    estRent: 'Estimated Total Storage Rent:',
+    confirmBtn: 'Confirm Reservation',
+    successTitle: 'Space Reserved Successfully!',
+    phoneContact: 'Facility Owner Contact:',
+  },
+};
+
+export default function WarehouseScreen({ language = 'mr', onBookingConfirmed }) {
   const [selectedStorage, setSelectedStorage] = useState(null);
   const [sheetVisible, setSheetVisible] = useState(false);
   const [tonsRequested, setTonsRequested] = useState(10);
   const [monthsCount, setMonthsCount] = useState(2);
   const [onlyColdStorage, setOnlyColdStorage] = useState(false);
+
+  const t = WAREHOUSE_TEXTS[language] || WAREHOUSE_TEXTS.mr;
 
   const displayedList = onlyColdStorage
     ? WAREHOUSE_DATA.filter((w) => w.isColdStorage)
@@ -91,13 +179,16 @@ export default function WarehouseScreen({ onBookingConfirmed }) {
 
   const handleConfirmReservation = () => {
     const total = calculateEstimate();
+    const storageName = selectedStorage.name[language] || selectedStorage.name.mr;
+    const owner = selectedStorage.ownerName[language] || selectedStorage.ownerName.mr;
+
     const newBooking = {
       id: `WH-${Date.now().toString().slice(-6)}`,
       resourceType: 'warehouse',
-      resourceName: `${selectedStorage.name} (${tonsRequested} टन / ${monthsCount} महिने)`,
-      providerName: selectedStorage.ownerName,
+      resourceName: `${storageName} (${tonsRequested} ${t.tonsSuffix} / ${monthsCount} ${t.monthsSuffix})`,
+      providerName: owner,
       totalAmount: total,
-      date: new Date().toLocaleDateString('mr-IN'),
+      date: new Date().toLocaleDateString(language === 'en' ? 'en-US' : 'mr-IN'),
       status: 'Confirmed',
     };
 
@@ -107,18 +198,16 @@ export default function WarehouseScreen({ onBookingConfirmed }) {
     }
 
     Alert.alert(
-      'जागा आरक्षण निश्चित!',
-      `${selectedStorage.name} मध्ये ${tonsRequested} टन जागेचे यशस्वी आरक्षण झाले आहे.\nएकूण अंदाजे भाडे: ₹${total}\nमालकाशी संपर्क: ${selectedStorage.phone}`
+      t.successTitle,
+      `${storageName}\n${t.estRent} ₹${total}\n${t.phoneContact} ${selectedStorage.phone}`
     );
   };
 
   return (
     <View style={styles.container}>
       <View style={styles.header}>
-        <Text style={styles.title}>गोदाम व शीतगृह साठवणूक</Text>
-        <Text style={styles.subtitle}>
-          हमीभाव मिळेपर्यंत धान्य व फळे सुरक्षित ठेवा
-        </Text>
+        <Text style={styles.title}>{t.title}</Text>
+        <Text style={styles.subtitle}>{t.subtitle}</Text>
 
         {/* Filter Toggle */}
         <View style={styles.filterRow}>
@@ -132,7 +221,7 @@ export default function WarehouseScreen({ onBookingConfirmed }) {
                 !onlyColdStorage && styles.filterChipTextActive,
               ]}
             >
-              सर्व साठवणूक ({WAREHOUSE_DATA.length})
+              {t.allStorage} ({WAREHOUSE_DATA.length})
             </Text>
           </TouchableOpacity>
 
@@ -152,7 +241,7 @@ export default function WarehouseScreen({ onBookingConfirmed }) {
                 onlyColdStorage && styles.filterChipTextActive,
               ]}
             >
-              फक्त शीतगृह (Cold Storage)
+              {t.coldOnly}
             </Text>
           </TouchableOpacity>
         </View>
@@ -162,113 +251,119 @@ export default function WarehouseScreen({ onBookingConfirmed }) {
         contentContainerStyle={styles.listContainer}
         showsVerticalScrollIndicator={false}
       >
-        {displayedList.map((item) => (
-          <View key={item.id} style={styles.card}>
-            <View style={styles.cardTop}>
-              <View
-                style={[
-                  styles.iconBox,
-                  { backgroundColor: item.isColdStorage ? '#E0F2FE' : Colors.mintTint },
-                ]}
-              >
-                <Ionicons
-                  name={item.isColdStorage ? 'snow' : 'business'}
-                  size={24}
-                  color={item.isColdStorage ? Colors.info : Colors.primary}
+        {displayedList.map((item) => {
+          const name = item.name[language] || item.name.mr;
+          const village = item.village[language] || item.village.mr;
+          const suitableCrops = item.suitableFor[language] || item.suitableFor.mr;
+
+          return (
+            <View key={item.id} style={styles.card}>
+              <View style={styles.cardTop}>
+                <View
+                  style={[
+                    styles.iconBox,
+                    { backgroundColor: item.isColdStorage ? '#E0F2FE' : Colors.mintTint },
+                  ]}
+                >
+                  <Ionicons
+                    name={item.isColdStorage ? 'snow' : 'business'}
+                    size={24}
+                    color={item.isColdStorage ? Colors.info : Colors.primary}
+                  />
+                </View>
+
+                <View style={styles.cardMainInfo}>
+                  <Text style={styles.name}>{name}</Text>
+                  <Text style={styles.location}>📍 {village}</Text>
+                </View>
+
+                <StatusBadge
+                  label={`${item.availableTons} ${t.spaceAvailable}`}
+                  status="success"
+                  size="small"
                 />
               </View>
 
-              <View style={styles.cardMainInfo}>
-                <Text style={styles.name}>{item.name}</Text>
-                <Text style={styles.location}>📍 {item.village}</Text>
+              {/* Badges strip */}
+              <View style={styles.specStrip}>
+                {item.isColdStorage && (
+                  <View style={styles.specBadge}>
+                    <Ionicons name="thermometer-outline" size={13} color={Colors.info} />
+                    <Text style={styles.specText}>{item.tempRange}</Text>
+                  </View>
+                )}
+                {item.cctv && (
+                  <View style={styles.specBadge}>
+                    <Ionicons name="videocam-outline" size={13} color={Colors.primaryLight} />
+                    <Text style={styles.specText}>{t.cctvBadge}</Text>
+                  </View>
+                )}
+                {item.insured && (
+                  <View style={styles.specBadge}>
+                    <Ionicons name="shield-checkmark-outline" size={13} color="#B45309" />
+                    <Text style={styles.specText}>{t.insuredBadge}</Text>
+                  </View>
+                )}
               </View>
 
-              <StatusBadge
-                label={`${item.availableTons} टन मोकळे`}
-                status="success"
-                size="small"
-              />
-            </View>
-
-            {/* Badges strip: CCTV, Insurance, Temp */}
-            <View style={styles.specStrip}>
-              {item.isColdStorage && (
-                <View style={styles.specBadge}>
-                  <Ionicons name="thermometer-outline" size={13} color={Colors.info} />
-                  <Text style={styles.specText}>{item.tempRange}</Text>
-                </View>
-              )}
-              {item.cctv && (
-                <View style={styles.specBadge}>
-                  <Ionicons name="videocam-outline" size={13} color={Colors.primaryLight} />
-                  <Text style={styles.specText}>CCTV सुरक्षित</Text>
-                </View>
-              )}
-              {item.insured && (
-                <View style={styles.specBadge}>
-                  <Ionicons name="shield-checkmark-outline" size={13} color="#B45309" />
-                  <Text style={styles.specText}>विमा संरक्षित</Text>
-                </View>
-              )}
-            </View>
-
-            {/* Suitable crops tags */}
-            <View style={styles.cropsRow}>
-              <Text style={styles.cropsLabel}>योग्य पिके: </Text>
-              {item.suitableFor.map((crop, idx) => (
-                <Text key={idx} style={styles.cropName}>
-                  {crop}
-                  {idx < item.suitableFor.length - 1 ? ', ' : ''}
-                </Text>
-              ))}
-            </View>
-
-            {/* Pricing and Action */}
-            <View style={styles.footerRow}>
-              <View>
-                <Text style={styles.priceSub}>साठवणूक दर:</Text>
-                <Text style={styles.price}>
-                  ₹{item.pricePerTonMonth}
-                  <Text style={styles.priceUnit}> /टन/महिना</Text>
-                </Text>
+              {/* Suitable crops */}
+              <View style={styles.cropsRow}>
+                <Text style={styles.cropsLabel}>{t.suitableCrops}</Text>
+                {suitableCrops.map((crop, idx) => (
+                  <Text key={idx} style={styles.cropName}>
+                    {crop}
+                    {idx < suitableCrops.length - 1 ? ', ' : ''}
+                  </Text>
+                ))}
               </View>
 
-              <TouchableOpacity
-                style={styles.reserveBtn}
-                onPress={() => openReserve(item)}
-              >
-                <Text style={styles.reserveBtnText}>जागा आरक्षित करा</Text>
-              </TouchableOpacity>
+              {/* Pricing and Action */}
+              <View style={styles.footerRow}>
+                <View>
+                  <Text style={styles.priceSub}>{t.rateLabel}</Text>
+                  <Text style={styles.price}>
+                    ₹{item.pricePerTonMonth}
+                    <Text style={styles.priceUnit}> {t.perTonMonth}</Text>
+                  </Text>
+                </View>
+
+                <TouchableOpacity
+                  style={styles.reserveBtn}
+                  onPress={() => openReserve(item)}
+                >
+                  <Text style={styles.reserveBtnText}>{t.reserveBtn}</Text>
+                </TouchableOpacity>
+              </View>
             </View>
-          </View>
-        ))}
+          );
+        })}
       </ScrollView>
 
       {/* Reservation Bottom Sheet */}
       <BottomSheet
         visible={sheetVisible}
         onClose={() => setSheetVisible(false)}
-        title={selectedStorage?.name}
-        subtitle={`उपलब्ध जागा: ${selectedStorage?.availableTons} टन • दर: ₹${selectedStorage?.pricePerTonMonth}/टन/महिना`}
+        title={selectedStorage ? (selectedStorage.name[language] || selectedStorage.name.mr) : ''}
+        subtitle={selectedStorage ? `${selectedStorage.availableTons} ${t.spaceAvailable} • ₹${selectedStorage.pricePerTonMonth}${t.perTonMonth}` : ''}
       >
         {selectedStorage && (
           <View style={styles.sheetContent}>
             <View style={styles.inputGroup}>
-              <Text style={styles.inputLabel}>साठवणूक क्षमता (टन मध्ये):</Text>
+              <Text style={styles.inputLabel}>{t.capacityTonsLabel}</Text>
               <View style={styles.numberRow}>
-                {[5, 10, 20, 50].map((t) => (
+                {[5, 10, 20, 50].map((tons) => (
                   <TouchableOpacity
-                    key={t}
-                    style={[styles.tonChip, tonsRequested === t && styles.tonChipActive]}
-                    onPress={() => setTonsRequested(t)}
+                    key={tons}
+                    style={[styles.tonChip, tonsRequested === tons && styles.tonChipActive]}
+                    onPress={() => setTonsRequested(tons)}
                   >
                     <Text
                       style={[
                         styles.tonChipText,
-                        tonsRequested === t && styles.tonChipTextActive,
+                        tonsRequested === tons && styles.tonChipTextActive,
                       ]}
                     >
-                      {t} टन
+                      {tons} {t.tonsSuffix}
                     </Text>
                   </TouchableOpacity>
                 ))}
@@ -276,7 +371,7 @@ export default function WarehouseScreen({ onBookingConfirmed }) {
             </View>
 
             <View style={styles.inputGroup}>
-              <Text style={styles.inputLabel}>कालावधी (महिने):</Text>
+              <Text style={styles.inputLabel}>{t.durationMonthsLabel}</Text>
               <View style={styles.numberRow}>
                 {[1, 2, 3, 6].map((m) => (
                   <TouchableOpacity
@@ -290,7 +385,7 @@ export default function WarehouseScreen({ onBookingConfirmed }) {
                         monthsCount === m && styles.tonChipTextActive,
                       ]}
                     >
-                      {m} महिने
+                      {m} {t.monthsSuffix}
                     </Text>
                   </TouchableOpacity>
                 ))}
@@ -298,15 +393,15 @@ export default function WarehouseScreen({ onBookingConfirmed }) {
             </View>
 
             <View style={styles.estimateCard}>
-              <Text style={styles.estimateLabel}>अंदाजे एकूण भाडे रक्कम:</Text>
+              <Text style={styles.estimateLabel}>{t.estRent}</Text>
               <Text style={styles.estimateVal}>₹{calculateEstimate()}</Text>
               <Text style={styles.estimateSub}>
-                ({tonsRequested} टन × {monthsCount} महिने × ₹{selectedStorage.pricePerTonMonth})
+                ({tonsRequested} {t.tonsSuffix} × {monthsCount} {t.monthsSuffix} × ₹{selectedStorage.pricePerTonMonth})
               </Text>
             </View>
 
             <PrimaryButton
-              title="जागा निश्चित करा"
+              title={t.confirmBtn}
               icon="checkmark-done"
               onPress={handleConfirmReservation}
               style={{ marginTop: Spacing.md }}

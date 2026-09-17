@@ -1,5 +1,5 @@
-// KRUSHI-SOOTRA (कृषी-सूत्र)
-// Skilled Farm Labour & Mukadam Teams Marketplace Screen
+// KRUSHI-SOOTRA (कृषी-सूत्र / कृषि-सूत्र)
+// Skilled Farm Labour & Mukadam Teams Marketplace Screen (100% Pure Multilingual)
 
 import React, { useState } from 'react';
 import {
@@ -18,95 +18,172 @@ import StatusBadge from '../components/ui/StatusBadge';
 import BottomSheet from '../components/ui/BottomSheet';
 import PrimaryButton from '../components/ui/PrimaryButton';
 
-const INDIVIDUAL_LABOUR = [
+const INDIVIDUAL_LABOUR_DATA = [
   {
     id: 'lab_1',
-    name: 'ज्ञानेश्वर मोरे',
-    skills: ['कीटकनाशक फवारणी', 'खत व्यवस्थापन', 'ठिबक दुरुस्ती'],
+    name: { mr: 'ज्ञानेश्वर मोरे', hi: 'ज्ञानेश्वर मोरे', en: 'Dnyaneshwar More' },
+    skills: {
+      mr: ['कीटकनाशक फवारणी', 'खत व्यवस्थापन', 'ठिबक दुरुस्ती'],
+      hi: ['कीटनाशक छिड़काव', 'खाद प्रबंधन', 'ड्रिप मरम्मत'],
+      en: ['Pesticide Spraying', 'Fertilizer Management', 'Drip Repair'],
+    },
     experienceYears: 8,
     dailyRate: 450,
-    halfDayRate: 250,
-    village: 'हवेली, पुणे',
-    rating: 4.9,
-    reviews: 24,
+    village: { mr: 'हवेली, पुणे', hi: 'हवेली, पुणे', en: 'Haveli, Pune' },
     phone: '+91 98231 11222',
     available: true,
   },
   {
     id: 'lab_2',
-    name: 'सुनीताबाई गायकवाड',
-    skills: ['कांदा लागवड', 'खुरपणी', 'सोयाबीन काढणी'],
+    name: { mr: 'सुनीताबाई गायकवाड', hi: 'सुनीताबाई गायकवाड़', en: 'Sunitabai Gaikwad' },
+    skills: {
+      mr: ['कांदा लागवड', 'खुरपणी', 'सोयाबीन काढणी'],
+      hi: ['प्याज रोपाई', 'निराई-गुड़ाई', 'सोयाबीन कटाई'],
+      en: ['Onion Plantation', 'Weeding Operations', 'Soybean Harvesting'],
+    },
     experienceYears: 12,
     dailyRate: 400,
-    halfDayRate: 220,
-    village: 'मांजरी, पुणे',
-    rating: 5.0,
-    reviews: 31,
+    village: { mr: 'मांजरी, पुणे', hi: 'मांजरी, पुणे', en: 'Manjari, Pune' },
     phone: '+91 98232 22333',
     available: true,
   },
   {
     id: 'lab_3',
-    name: 'पंढरीनाथ शिंदे',
-    skills: ['द्राक्ष बाग छाटणी', 'बांडिंग', 'फळबाग निगा'],
+    name: { mr: 'पंढरीनाथ शिंदे', hi: 'पंढरीनाथ शिंदे', en: 'Pandharinath Shinde' },
+    skills: {
+      mr: ['द्राक्ष बाग छाटणी', 'बांडिंग', 'फळबाग निगा'],
+      hi: ['अंगूर बाग छंटाई', 'बांडिंग', 'फलोद्यान देखभाल'],
+      en: ['Grape Pruning', 'Vine Banding', 'Orchard Maintenance'],
+    },
     experienceYears: 15,
     dailyRate: 600,
-    halfDayRate: 350,
-    village: 'उरुळी कांचन, पुणे',
-    rating: 4.8,
-    reviews: 19,
+    village: { mr: 'उरुळी कांचन, पुणे', hi: 'उरुली कंचन, पुणे', en: 'Uruli Kanchan, Pune' },
     phone: '+91 98233 33444',
     available: true,
   },
 ];
 
-const MUKADAM_TEAMS = [
+const MUKADAM_TEAMS_DATA = [
   {
     id: 'team_1',
-    leaderName: 'मुकादम बाबुराव थोरात',
+    leaderName: { mr: 'मुकादम बाबुराव थोरात', hi: 'मुकादम बाबूराव थोरात', en: 'Leader Baburao Thorat' },
     teamSize: 15,
-    skills: ['ऊस तोडणी व वाहतूक', 'गहू-हरभरा सोंगणी', 'कांदा काढणी'],
+    skills: {
+      mr: ['ऊस तोडणी व वाहतूक', 'गहू-हरभरा सोंगणी', 'कांदा काढणी'],
+      hi: ['गन्ना कटाई व ढुलाई', 'गेहूं-चना कटाई', 'प्याज खुदाई'],
+      en: ['Sugarcane Harvesting', 'Wheat-Gram Reaping', 'Onion Harvesting'],
+    },
     dailyRatePerWorker: 420,
-    village: 'दौंड - हवेली परिसर',
-    rating: 4.9,
-    completedJobs: 42,
+    village: { mr: 'दौंड परिसर', hi: 'दौंड क्षेत्र', en: 'Daund Region' },
     phone: '+91 94220 55667',
     available: true,
   },
   {
     id: 'team_2',
-    leaderName: 'मुकादम मंगलताई कांबळे (महिला टोळी)',
+    leaderName: { mr: 'मुकादम मंगलताई कांबळे (महिला गट)', hi: 'मुकादम मंगलताई कांबले (महिला समूह)', en: 'Leader Mangaltai Kamble (Women Team)' },
     teamSize: 12,
-    skills: ['भाजीपाला तोडणी', 'खुरपणी व स्वच्छता', 'रोपांची पुनर्लागवड'],
+    skills: {
+      mr: ['भाजीपाला तोडणी', 'खुरपणी व स्वच्छता', 'रोपांची पुनर्लागवड'],
+      hi: ['सब्जी तुड़ाई', 'निराई और सफाई', 'पौध रोपाई'],
+      en: ['Vegetable Picking', 'Weeding & Cleaning', 'Sapling Transplantation'],
+    },
     dailyRatePerWorker: 380,
-    village: 'शिरूर - पुणे',
-    rating: 5.0,
-    completedJobs: 58,
+    village: { mr: 'शिरूर, पुणे', hi: 'शिरूर, पुणे', en: 'Shirur, Pune' },
     phone: '+91 94220 77889',
     available: true,
   },
-  {
-    id: 'team_3',
-    leaderName: 'मुकादम रामदास काळे',
-    teamSize: 20,
-    skills: ['डाळिंब व द्राक्ष तोडणी', 'क्रिएटिंग व पॅकिंग', 'जमीन मशागत'],
-    dailyRatePerWorker: 450,
-    village: 'इंदापूर - बारामती',
-    rating: 4.8,
-    completedJobs: 37,
-    phone: '+91 94220 99001',
-    available: false,
-  },
 ];
 
+const LABOUR_TEXTS = {
+  mr: {
+    title: 'शेतमजूर व मुकादम टोळी केंद्र',
+    subtitle: 'अनुभवी मजूर व कामगार टोळ्यांची थेट बुकिंग',
+    tabIndividual: 'कुशल मजूर',
+    tabTeams: 'मजूर टोळी व मुकादम',
+    searchPlaceholderIndividual: 'कौशल्य शोधा (उदा. खुरपणी, फवारणी, छाटणी)...',
+    searchPlaceholderTeams: 'मुकादम किंवा कामाचा प्रकार शोधा...',
+    yearsExperience: 'वर्षे अनुभव',
+    workersTeam: 'मजुरांची टोळी',
+    available: 'उपलब्ध',
+    busy: 'व्यस्त',
+    activeTeam: 'सक्रिय टोळी',
+    dailyWage: 'दैनिक मजुरी दर:',
+    perDay: '/दिवस',
+    ratePerWorker: 'दर प्रति मजूर:',
+    perWorkerDay: '/मजूर/दिवस',
+    callAction: 'थेट संपर्क',
+    bookAction: 'बुकिंग करा',
+    bookTeamAction: 'टोळी बुक करा',
+    workersNeeded: 'आवश्यक मजुरांची संख्या:',
+    workDays: 'कामाचे दिवस:',
+    estCost: 'अंदाजे मजुरी रक्कम:',
+    workPaymentNote: '* काम पूर्ण झाल्यावर मजुरांना थेट हिशोबाने मोबदला द्या.',
+    confirmBooking: 'बुकिंग निश्चित करा',
+    bookingSuccess: 'मजूर बुकिंग निश्चित!',
+  },
+  hi: {
+    title: 'खेत मजदूर और मुकादम टोली केंद्र',
+    subtitle: 'अनुभवी कृषि श्रमिक और मजदूर टोलियों की सीधी बुकिंग',
+    tabIndividual: 'कुशल मजदूर',
+    tabTeams: 'मजदूर टोली और मुकादम',
+    searchPlaceholderIndividual: 'कौशल खोजें (जैसे निराई, छिड़काव, छंटाई)...',
+    searchPlaceholderTeams: 'मुकादम या कार्य का प्रकार खोजें...',
+    yearsExperience: 'वर्ष अनुभव',
+    workersTeam: 'मजदूरों की टोली',
+    available: 'उपलब्ध',
+    busy: 'व्यस्त',
+    activeTeam: 'सक्रिय टोली',
+    dailyWage: 'दैनिक मजदूरी दर:',
+    perDay: '/दिन',
+    ratePerWorker: 'दर प्रति श्रमिक:',
+    perWorkerDay: '/श्रमिक/दिन',
+    callAction: 'सीधा संपर्क',
+    bookAction: 'बुकिंग करें',
+    bookTeamAction: 'टोली बुक करें',
+    workersNeeded: 'आवश्यक श्रमिकों की संख्या:',
+    workDays: 'कार्य दिवस:',
+    estCost: 'अनुमानित मजदूरी राशि:',
+    workPaymentNote: '* कार्य पूर्ण होने पर श्रमिकों को सीधे भुगतान करें।',
+    confirmBooking: 'बुकिंग पक्की करें',
+    bookingSuccess: 'मजदूर बुकिंग पक्की हुई!',
+  },
+  en: {
+    title: 'Farm Labour & Contractor Hub',
+    subtitle: 'Direct booking for skilled agricultural workers and harvesting teams',
+    tabIndividual: 'Skilled Labour',
+    tabTeams: 'Labour Teams & Leaders',
+    searchPlaceholderIndividual: 'Search skills (e.g., weeding, spraying, pruning)...',
+    searchPlaceholderTeams: 'Search leader or task type...',
+    yearsExperience: 'years experience',
+    workersTeam: 'workers team',
+    available: 'Available',
+    busy: 'Busy',
+    activeTeam: 'Active Team',
+    dailyWage: 'Daily Wage Rate:',
+    perDay: '/day',
+    ratePerWorker: 'Rate per Worker:',
+    perWorkerDay: '/worker/day',
+    callAction: 'Direct Call',
+    bookAction: 'Book Worker',
+    bookTeamAction: 'Book Team',
+    workersNeeded: 'Workers Needed:',
+    workDays: 'Working Days:',
+    estCost: 'Estimated Total Wages:',
+    workPaymentNote: '* Pay workers directly upon satisfactory completion of field work.',
+    confirmBooking: 'Confirm Reservation',
+    bookingSuccess: 'Worker Booking Confirmed!',
+  },
+};
+
 export default function LabourScreen({ language = 'mr', onBookingConfirmed }) {
-  const [activeSegmentIndex, setActiveSegmentIndex] = useState(0); // 0: Individual, 1: Teams
+  const [activeSegmentIndex, setActiveSegmentIndex] = useState(0);
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedLabour, setSelectedLabour] = useState(null);
   const [bookingSheetVisible, setBookingSheetVisible] = useState(false);
   const [daysCount, setDaysCount] = useState(1);
   const [workersNeeded, setWorkersNeeded] = useState(5);
 
+  const t = LABOUR_TEXTS[language] || LABOUR_TEXTS.mr;
   const isIndividual = activeSegmentIndex === 0;
 
   const openBooking = (item) => {
@@ -130,15 +207,17 @@ export default function LabourScreen({ language = 'mr', onBookingConfirmed }) {
   const handleConfirmBooking = () => {
     const cost = calculateCost();
     const isTeam = !isIndividual;
-    const name = isTeam ? selectedLabour.leaderName : selectedLabour.name;
+    const name = isTeam
+      ? selectedLabour.leaderName[language] || selectedLabour.leaderName.mr
+      : selectedLabour.name[language] || selectedLabour.name.mr;
 
     const newBooking = {
       id: `LB-${Date.now().toString().slice(-6)}`,
       resourceType: 'labour',
-      resourceName: `${name} (${isTeam ? `${workersNeeded} मजूर` : 'वैयक्तिक'})`,
+      resourceName: `${name} (${isTeam ? `${workersNeeded}` : '1'})`,
       providerName: name,
       totalAmount: cost.total,
-      date: new Date().toLocaleDateString('mr-IN'),
+      date: new Date().toLocaleDateString(language === 'en' ? 'en-US' : 'mr-IN'),
       status: 'Confirmed',
     };
 
@@ -148,24 +227,22 @@ export default function LabourScreen({ language = 'mr', onBookingConfirmed }) {
     }
 
     Alert.alert(
-      'मजूर बुकिंग निश्चित!',
-      `${name} यांच्यासोबत समन्वय साधला गेला आहे.\nएकूण अंदाजे मजुरी: ₹${cost.total}\nसंपर्क: ${selectedLabour.phone}`
+      t.bookingSuccess,
+      `${name}\n${t.estCost} ₹${cost.total}\n${selectedLabour.phone}`
     );
   };
 
   return (
     <View style={styles.container}>
-      {/* Top Title & Search */}
+      {/* Header */}
       <View style={styles.header}>
-        <Text style={styles.title}>शेतमजूर व मुकादम टोळी केंद्र</Text>
-        <Text style={styles.subtitle}>
-          अनुभवी मजूर व कामगार टोळ्यांची थेट बुकिंग
-        </Text>
+        <Text style={styles.title}>{t.title}</Text>
+        <Text style={styles.subtitle}>{t.subtitle}</Text>
 
         <SegmentedControl
           segments={[
-            { label: 'वैयक्तिक कुशल मजूर (Individual)' },
-            { label: 'मजूर टोळी / मुकादम (Teams)' },
+            { label: t.tabIndividual },
+            { label: t.tabTeams },
           ]}
           selectedIndex={activeSegmentIndex}
           onChange={(idx) => setActiveSegmentIndex(idx)}
@@ -175,11 +252,7 @@ export default function LabourScreen({ language = 'mr', onBookingConfirmed }) {
           <Ionicons name="search" size={18} color={Colors.textSecondary} />
           <TextInput
             style={styles.searchInput}
-            placeholder={
-              isIndividual
-                ? 'कौशल्य शोधा (उदा. खुरपणी, फवारणी, छाटणी)...'
-                : 'मुकादम किंवा कामाचा प्रकार शोधा...'
-            }
+            placeholder={isIndividual ? t.searchPlaceholderIndividual : t.searchPlaceholderTeams}
             placeholderTextColor={Colors.textTertiary}
             value={searchQuery}
             onChangeText={setSearchQuery}
@@ -192,149 +265,167 @@ export default function LabourScreen({ language = 'mr', onBookingConfirmed }) {
         showsVerticalScrollIndicator={false}
       >
         {isIndividual ? (
-          /* Individual Labour Cards */
-          INDIVIDUAL_LABOUR.map((lab) => (
-            <View key={lab.id} style={styles.card}>
-              <View style={styles.cardHeader}>
-                <View style={styles.avatar}>
-                  <Ionicons name="person" size={24} color={Colors.primary} />
-                </View>
-                <View style={styles.headerText}>
-                  <View style={styles.nameRow}>
-                    <Text style={styles.name}>{lab.name}</Text>
-                    <Ionicons
-                      name="checkmark-circle"
-                      size={16}
-                      color={Colors.primaryLight}
-                      style={{ marginLeft: 4 }}
-                    />
+          INDIVIDUAL_LABOUR_DATA.map((lab) => {
+            const labName = lab.name[language] || lab.name.mr;
+            const labVillage = lab.village[language] || lab.village.mr;
+            const labSkills = lab.skills[language] || lab.skills.mr;
+
+            return (
+              <View key={lab.id} style={styles.card}>
+                <View style={styles.cardHeader}>
+                  <View style={styles.avatar}>
+                    <Ionicons name="person" size={24} color={Colors.primary} />
                   </View>
-                  <Text style={styles.villageText}>
-                    📍 {lab.village} • {lab.experienceYears} वर्षे अनुभव
-                  </Text>
-                </View>
-                <StatusBadge
-                  label={lab.available ? 'उपलब्ध' : 'व्यस्त'}
-                  status={lab.available ? 'success' : 'warning'}
-                  size="small"
-                />
-              </View>
-
-              {/* Skills Chips */}
-              <View style={styles.skillsWrapper}>
-                {lab.skills.map((skill, idx) => (
-                  <View key={idx} style={styles.skillPill}>
-                    <Text style={styles.skillPillText}>{skill}</Text>
+                  <View style={styles.headerText}>
+                    <View style={styles.nameRow}>
+                      <Text style={styles.name}>{labName}</Text>
+                      <Ionicons
+                        name="checkmark-circle"
+                        size={16}
+                        color={Colors.primaryLight}
+                        style={{ marginLeft: 4 }}
+                      />
+                    </View>
+                    <Text style={styles.villageText}>
+                      📍 {labVillage} • {lab.experienceYears} {t.yearsExperience}
+                    </Text>
                   </View>
-                ))}
-              </View>
-
-              {/* Footer Rates & Action */}
-              <View style={styles.cardFooter}>
-                <View>
-                  <Text style={styles.rateLabel}>दैनिक मजुरी दर:</Text>
-                  <Text style={styles.rateValue}>
-                    ₹{lab.dailyRate}
-                    <Text style={styles.rateUnit}> /दिवस</Text>
-                  </Text>
+                  <StatusBadge
+                    label={lab.available ? t.available : t.busy}
+                    status={lab.available ? 'success' : 'warning'}
+                    size="small"
+                  />
                 </View>
 
-                <View style={styles.actionButtons}>
-                  <TouchableOpacity
-                    style={styles.callBtn}
-                    onPress={() =>
-                      Alert.alert('थेट संपर्क', `${lab.name}: ${lab.phone}`)
-                    }
-                  >
-                    <Ionicons name="call" size={18} color={Colors.primary} />
-                  </TouchableOpacity>
+                {/* Skills */}
+                <View style={styles.skillsWrapper}>
+                  {labSkills.map((skill, idx) => (
+                    <View key={idx} style={styles.skillPill}>
+                      <Text style={styles.skillPillText}>{skill}</Text>
+                    </View>
+                  ))}
+                </View>
 
-                  <TouchableOpacity
-                    style={styles.bookBtn}
-                    onPress={() => openBooking(lab)}
-                  >
-                    <Text style={styles.bookBtnText}>बुकिंग करा</Text>
-                  </TouchableOpacity>
+                {/* Footer */}
+                <View style={styles.cardFooter}>
+                  <View>
+                    <Text style={styles.rateLabel}>{t.dailyWage}</Text>
+                    <Text style={styles.rateValue}>
+                      ₹{lab.dailyRate}
+                      <Text style={styles.rateUnit}> {t.perDay}</Text>
+                    </Text>
+                  </View>
+
+                  <View style={styles.actionButtons}>
+                    <TouchableOpacity
+                      style={styles.callBtn}
+                      onPress={() => Alert.alert(t.callAction, `${labName}: ${lab.phone}`)}
+                    >
+                      <Ionicons name="call" size={18} color={Colors.primary} />
+                    </TouchableOpacity>
+
+                    <TouchableOpacity
+                      style={styles.bookBtn}
+                      onPress={() => openBooking(lab)}
+                    >
+                      <Text style={styles.bookBtnText}>{t.bookAction}</Text>
+                    </TouchableOpacity>
+                  </View>
                 </View>
               </View>
-            </View>
-          ))
+            );
+          })
         ) : (
-          /* Mukadam Team Cards */
-          MUKADAM_TEAMS.map((team) => (
-            <View key={team.id} style={styles.card}>
-              <View style={styles.cardHeader}>
-                <View style={[styles.avatar, { backgroundColor: '#E0F2FE' }]}>
-                  <Ionicons name="people" size={24} color={Colors.info} />
-                </View>
-                <View style={styles.headerText}>
-                  <View style={styles.nameRow}>
-                    <Text style={styles.name}>{team.leaderName}</Text>
+          MUKADAM_TEAMS_DATA.map((team) => {
+            const leaderName = team.leaderName[language] || team.leaderName.mr;
+            const teamVillage = team.village[language] || team.village.mr;
+            const teamSkills = team.skills[language] || team.skills.mr;
+
+            return (
+              <View key={team.id} style={styles.card}>
+                <View style={styles.cardHeader}>
+                  <View style={[styles.avatar, { backgroundColor: '#E0F2FE' }]}>
+                    <Ionicons name="people" size={24} color={Colors.info} />
                   </View>
-                  <Text style={styles.villageText}>
-                    📍 {team.village} • {team.teamSize} मजुरांची टोळी
-                  </Text>
-                </View>
-                <StatusBadge
-                  label={team.available ? 'सक्रिय टोळी' : 'व्यस्त'}
-                  status={team.available ? 'success' : 'neutral'}
-                  size="small"
-                />
-              </View>
-
-              {/* Team Skills */}
-              <View style={styles.skillsWrapper}>
-                {team.skills.map((skill, idx) => (
-                  <View key={idx} style={[styles.skillPill, { backgroundColor: '#E0F2FE', borderColor: '#BAE6FD' }]}>
-                    <Text style={[styles.skillPillText, { color: Colors.info }]}>{skill}</Text>
+                  <View style={styles.headerText}>
+                    <View style={styles.nameRow}>
+                      <Text style={styles.name}>{leaderName}</Text>
+                    </View>
+                    <Text style={styles.villageText}>
+                      📍 {teamVillage} • {team.teamSize} {t.workersTeam}
+                    </Text>
                   </View>
-                ))}
-              </View>
-
-              <View style={styles.cardFooter}>
-                <View>
-                  <Text style={styles.rateLabel}>दर प्रति मजूर:</Text>
-                  <Text style={styles.rateValue}>
-                    ₹{team.dailyRatePerWorker}
-                    <Text style={styles.rateUnit}> /मजूर/दिवस</Text>
-                  </Text>
+                  <StatusBadge
+                    label={team.available ? t.activeTeam : t.busy}
+                    status={team.available ? 'success' : 'neutral'}
+                    size="small"
+                  />
                 </View>
 
-                <View style={styles.actionButtons}>
-                  <TouchableOpacity
-                    style={styles.callBtn}
-                    onPress={() =>
-                      Alert.alert('थेट संपर्क', `${team.leaderName}: ${team.phone}`)
-                    }
-                  >
-                    <Ionicons name="call" size={18} color={Colors.primary} />
-                  </TouchableOpacity>
+                {/* Team Skills */}
+                <View style={styles.skillsWrapper}>
+                  {teamSkills.map((skill, idx) => (
+                    <View key={idx} style={[styles.skillPill, { backgroundColor: '#E0F2FE', borderColor: '#BAE6FD' }]}>
+                      <Text style={[styles.skillPillText, { color: Colors.info }]}>{skill}</Text>
+                    </View>
+                  ))}
+                </View>
 
-                  <TouchableOpacity
-                    style={styles.bookBtn}
-                    onPress={() => openBooking(team)}
-                  >
-                    <Text style={styles.bookBtnText}>टोळी बुक करा</Text>
-                  </TouchableOpacity>
+                <View style={styles.cardFooter}>
+                  <View>
+                    <Text style={styles.rateLabel}>{t.ratePerWorker}</Text>
+                    <Text style={styles.rateValue}>
+                      ₹{team.dailyRatePerWorker}
+                      <Text style={styles.rateUnit}> {t.perWorkerDay}</Text>
+                    </Text>
+                  </View>
+
+                  <View style={styles.actionButtons}>
+                    <TouchableOpacity
+                      style={styles.callBtn}
+                      onPress={() => Alert.alert(t.callAction, `${leaderName}: ${team.phone}`)}
+                    >
+                      <Ionicons name="call" size={18} color={Colors.primary} />
+                    </TouchableOpacity>
+
+                    <TouchableOpacity
+                      style={styles.bookBtn}
+                      onPress={() => openBooking(team)}
+                    >
+                      <Text style={styles.bookBtnText}>{t.bookTeamAction}</Text>
+                    </TouchableOpacity>
+                  </View>
                 </View>
               </View>
-            </View>
-          ))
+            );
+          })
         )}
       </ScrollView>
 
-      {/* Booking Sheet Modal */}
+      {/* Booking Sheet */}
       <BottomSheet
         visible={bookingSheetVisible}
         onClose={() => setBookingSheetVisible(false)}
-        title={isIndividual ? selectedLabour?.name : selectedLabour?.leaderName}
-        subtitle={isIndividual ? `दैनिक मजुरी ₹${selectedLabour?.dailyRate}` : `${selectedLabour?.teamSize} मजुरांची टोळी`}
+        title={
+          selectedLabour
+            ? isIndividual
+              ? selectedLabour.name[language] || selectedLabour.name.mr
+              : selectedLabour.leaderName[language] || selectedLabour.leaderName.mr
+            : ''
+        }
+        subtitle={
+          selectedLabour
+            ? isIndividual
+              ? `₹${selectedLabour.dailyRate} ${t.perDay}`
+              : `${selectedLabour.teamSize} ${t.workersTeam}`
+            : ''
+        }
       >
         {selectedLabour && (
           <View style={styles.sheetBody}>
             {!isIndividual && (
               <View style={styles.counterRow}>
-                <Text style={styles.counterLabel}>आवश्यक मजुरांची संख्या:</Text>
+                <Text style={styles.counterLabel}>{t.workersNeeded}</Text>
                 <View style={styles.counterControls}>
                   <TouchableOpacity
                     style={styles.counterBtn}
@@ -360,7 +451,7 @@ export default function LabourScreen({ language = 'mr', onBookingConfirmed }) {
             )}
 
             <View style={styles.counterRow}>
-              <Text style={styles.counterLabel}>कामाचे दिवस:</Text>
+              <Text style={styles.counterLabel}>{t.workDays}</Text>
               <View style={styles.counterControls}>
                 <TouchableOpacity
                   style={styles.counterBtn}
@@ -382,16 +473,14 @@ export default function LabourScreen({ language = 'mr', onBookingConfirmed }) {
 
             <View style={styles.calcBox}>
               <View style={styles.calcRow}>
-                <Text style={styles.calcLabel}>अंदाजे मजुरी रक्कम:</Text>
+                <Text style={styles.calcLabel}>{t.estCost}</Text>
                 <Text style={styles.calcVal}>₹{calculateCost().total}</Text>
               </View>
-              <Text style={styles.calcSub}>
-                * काम पूर्ण झाल्यावर मजुरांना थेट हिशोबाने मोबदला द्या.
-              </Text>
+              <Text style={styles.calcSub}>{t.workPaymentNote}</Text>
             </View>
 
             <PrimaryButton
-              title="बुकिंग निश्चित करा"
+              title={t.confirmBooking}
               icon="checkmark-circle"
               onPress={handleConfirmBooking}
               style={{ marginTop: Spacing.md }}

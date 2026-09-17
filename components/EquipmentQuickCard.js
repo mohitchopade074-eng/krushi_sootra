@@ -33,7 +33,9 @@ export default function EquipmentQuickCard({
         <View style={styles.headerInfo}>
           <View style={styles.titleRow}>
             <Text style={styles.title} numberOfLines={1}>
-              {item.name}
+              {typeof item.name === 'object'
+                ? item.name[language] || item.name.mr || item.name.en
+                : item.name}
             </Text>
           </View>
           <Text style={styles.modelSubtitle} numberOfLines={1}>
@@ -42,7 +44,11 @@ export default function EquipmentQuickCard({
         </View>
 
         <StatusBadge
-          label={isAvailable ? (language === 'mr' ? 'उपलब्ध' : 'Available') : (language === 'mr' ? 'व्यस्त' : 'In Use')}
+          label={
+            isAvailable
+              ? (language === 'hi' ? 'उपलब्ध' : language === 'en' ? 'Available' : 'उपलब्ध')
+              : (language === 'hi' ? 'व्यस्त' : language === 'en' ? 'In Use' : 'व्यस्त')
+          }
           status={isAvailable ? 'success' : 'warning'}
           size="small"
         />
@@ -73,7 +79,9 @@ export default function EquipmentQuickCard({
         <View style={styles.metaItem}>
           <Ionicons name="location-outline" size={14} color={Colors.textSecondary} />
           <Text style={styles.locationText} numberOfLines={1}>
-            {item.village || 'हवेली'}
+            {typeof item.village === 'object'
+              ? item.village[language] || item.village.mr || item.village.en
+              : (item.village || (language === 'en' ? 'Pune' : 'पुणे'))}
           </Text>
         </View>
       </View>
@@ -82,16 +90,16 @@ export default function EquipmentQuickCard({
       <View style={styles.footerRow}>
         <View>
           <Text style={styles.priceLabel}>
-            {language === 'mr' ? 'भाडे दर' : 'Rental Rate'}
+            {language === 'hi' ? 'किराया दर' : language === 'en' ? 'Rental Rate' : 'भाडे दर'}
           </Text>
           <View style={styles.priceRow}>
             <Text style={styles.priceValue}>₹{item.dailyPrice}</Text>
             <Text style={styles.priceUnit}>
-              /{language === 'mr' ? 'दिवस' : 'day'}
+              {language === 'hi' ? '/दिन' : language === 'en' ? '/day' : '/दिवस'}
             </Text>
             {item.acrePrice && (
               <Text style={styles.subPrice}>
-                (₹{item.acrePrice}/{language === 'mr' ? 'एकर' : 'acre'})
+                (₹{item.acrePrice}{language === 'hi' ? '/एकड़' : language === 'en' ? '/acre' : '/एकर'})
               </Text>
             )}
           </View>
@@ -103,7 +111,7 @@ export default function EquipmentQuickCard({
           activeOpacity={0.8}
         >
           <Text style={styles.bookButtonText}>
-            {language === 'mr' ? 'बुक करा' : 'Book'}
+            {language === 'hi' ? 'बुक करें' : language === 'en' ? 'Book Now' : 'बुक करा'}
           </Text>
           <Ionicons name="arrow-forward" size={16} color={Colors.textInverse} style={{ marginLeft: 4 }} />
         </TouchableOpacity>

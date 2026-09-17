@@ -1,7 +1,7 @@
-// KRUSHI-SOOTRA (कृषी-सूत्र)
-// AI Krushi Assistant (कृषी मित्र) - Conversational Agricultural Intelligence
+// KRUSHI-SOOTRA (कृषी-सूत्र / कृषि-सूत्र)
+// AI Krushi Assistant - 100% Pure Multilingual Conversational Intelligence
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   View,
   Text,
@@ -16,27 +16,85 @@ import {
 import { Ionicons } from '@expo/vector-icons';
 import { Colors, Radii, Shadows, Spacing, Typography } from '../constants/theme';
 
-const QUICK_PROMPTS = [
-  'कांद्यावरील करपा कसा रोखावा?',
-  'कपाशीमध्ये बोंडअळी नियंत्रण उपाय?',
-  'ऊस फुटवे वाढवण्यासाठी योग्य खत?',
-  'सोयाबीन काढणीची योग्य वेळ कोणती?',
-  'ड्रिपसाठी विद्राव्य खतांचे प्रमाण काय?',
-];
-
-const INITIAL_MESSAGES = [
-  {
-    id: 'm1',
-    sender: 'ai',
-    text: 'नमस्कार शेतकरी मित्र! मी तुमचा AI कृषी सल्लागार आहे. खत व्यवस्थापन, कीड-रोग नियंत्रण, हवामान किंवा पीक नियोजनाविषयी कोणताही प्रश्न विचारा.',
-    time: 'आताच',
+const AI_STRINGS = {
+  mr: {
+    title: 'AI कृषी सल्लागार',
+    online: '२४/७ तत्पर',
+    typing: 'कृषी सल्ला तयार करत आहे...',
+    inputPlaceholder: 'येथे तुमचा शेती प्रश्न लिहा...',
+    voiceTitle: 'आवाज ओळख (व्हॉईस सर्च)',
+    voiceMsg: 'माईक चालू झाला आहे. तुमचा शेती प्रश्न बोला...',
+    initialGreeting: 'नमस्कार शेतकरी मित्र! मी तुमचा AI कृषी सल्लागार आहे. खत व्यवस्थापन, कीड-रोग नियंत्रण, हवामान किंवा पीक नियोजनाविषयी कोणताही प्रश्न विचारा.',
+    prompts: [
+      'कांद्यावरील करपा कसा रोखावा?',
+      'कपाशीमध्ये बोंडअळी नियंत्रण उपाय?',
+      'ऊस फुटवे वाढवण्यासाठी योग्य खत?',
+      'सोयाबीन काढणीची योग्य वेळ कोणती?',
+      'ड्रिपसाठी विद्राव्य खतांचे प्रमाण काय?',
+    ],
   },
-];
+  hi: {
+    title: 'AI कृषि सलाहकार',
+    online: '२४/७ उपलब्ध',
+    typing: 'कृषि सलाह तैयार हो रही है...',
+    inputPlaceholder: 'यहाँ अपना कृषि प्रश्न लिखें...',
+    voiceTitle: 'आवाज़ पहचान (वॉयस सर्च)',
+    voiceMsg: 'माइक चालू है। अपनी फसल से संबंधित प्रश्न बोलें...',
+    initialGreeting: 'नमस्कार किसान मित्र! मैं आपका AI कृषि सलाहकार हूँ। खाद प्रबंधन, कीट-रोग नियंत्रण, मौसम या फसल नियोजन से जुड़ा कोई भी प्रश्न पूछें।',
+    prompts: [
+      'प्याज में झुलसा रोग कैसे रोकें?',
+      'कपास में गुलाबी सुंडी नियंत्रण के उपाय?',
+      'गन्ने में कल्ले बढ़ाने के लिए खाद?',
+      'सोयाबीन कटाई का सही समय कौन सा है?',
+      'ड्रिप द्वारा घुलनशील खाद का अनुपात क्या हो?',
+    ],
+  },
+  en: {
+    title: 'AI Krushi Assistant',
+    online: '24/7 Active',
+    typing: 'Generating agronomic advisory...',
+    inputPlaceholder: 'Type your farming question here...',
+    voiceTitle: 'Voice Recognition',
+    voiceMsg: 'Microphone is active. Speak your agricultural query...',
+    initialGreeting: 'Welcome Farmer Friend! I am your AI Krushi Assistant. Ask me any question regarding fertilizers, pest management, weather advisories, or crop planning.',
+    prompts: [
+      'How to control purple blotch in onions?',
+      'Pest management for bollworm in cotton?',
+      'Best fertilizers for sugarcane tillering?',
+      'Optimal harvest maturity signs for soybean?',
+      'Fertigation dosage chart for drip irrigation?',
+    ],
+  },
+};
 
-export default function AIAssistantScreen() {
-  const [messages, setMessages] = useState(INITIAL_MESSAGES);
+export default function AIAssistantScreen({ language = 'mr' }) {
+  const t = AI_STRINGS[language] || AI_STRINGS.mr;
+
+  const [messages, setMessages] = useState([
+    {
+      id: 'm1',
+      sender: 'ai',
+      text: t.initialGreeting,
+      time: '10:00 AM',
+    },
+  ]);
   const [inputText, setInputText] = useState('');
   const [isTyping, setIsTyping] = useState(false);
+
+  // Update initial message when language changes
+  useEffect(() => {
+    setMessages([
+      {
+        id: `m_${Date.now()}`,
+        sender: 'ai',
+        text: t.initialGreeting,
+        time: new Date().toLocaleTimeString(language === 'en' ? 'en-US' : 'mr-IN', {
+          hour: '2-digit',
+          minute: '2-digit',
+        }),
+      },
+    ]);
+  }, [language]);
 
   const handleSend = (textToSend) => {
     const query = (textToSend || inputText).trim();
@@ -46,48 +104,90 @@ export default function AIAssistantScreen() {
       id: `u_${Date.now()}`,
       sender: 'user',
       text: query,
-      time: new Date().toLocaleTimeString('mr-IN', { hour: '2-digit', minute: '2-digit' }),
+      time: new Date().toLocaleTimeString(language === 'en' ? 'en-US' : 'mr-IN', {
+        hour: '2-digit',
+        minute: '2-digit',
+      }),
     };
 
     setMessages((prev) => [...prev, userMsg]);
     setInputText('');
     setIsTyping(true);
 
-    // Realistic agronomic knowledge response generator
     setTimeout(() => {
       let aiResponseText = '';
 
-      if (query.includes('कांदा') || query.includes('करपा')) {
-        aiResponseText =
-          'कांद्यावरील जांभळा करपा (Purple Blotch) रोखण्यासाठी उपाय:\n\n' +
-          '१. सुरुवातीची लक्षणे दिसताच मॅन्कोझेब (Mancozeb 75% WP) ३० ग्रॅम किंवा प्रोपिकोनाझोल (Tilt) १५ मिली प्रति १५ लिटर पंपासाठी फवारा.\n' +
-          '२. औषध पानांवर टिकून राहण्यासाठी १ ग्रॅम स्टिकर (Spreader) अवश्य टाका.\n' +
-          '३. नत्राचा (युरिया) अतिरिक्त वापर टाळा व शेतात पाणी साचू देऊ नका.';
-      } else if (query.includes('बोंडअळी') || query.includes('कपाशी')) {
-        aiResponseText =
-          'कपाशीवरील गुलाबी बोंडअळी नियंत्रणासाठी सल्ला:\n\n' +
-          '१. एकरी ५ कामगंध सापळे (Pheromone Traps) लावावेत.\n' +
-          '२. अंड्यांच्या अवस्थेत ट्रायकोकार्ड (Trichogramma) ३ कार्ड प्रति एकर लावा.\n' +
-          '३. प्रादुर्भाव वाढल्यास इमामेक्टिन बेन्झोएट ५% SG ४ ग्रॅम किंवा प्रोफेनोफॉस ५०% EC ३० मिली प्रति पंप फवारणी करा.';
-      } else if (query.includes('ऊस') || query.includes('फुटवे')) {
-        aiResponseText =
-          'ऊसाच्या जोमदार फुटव्यांसाठी खत नियोजन:\n\n' +
-          '१. लागवडीनंतर ४५ व्या दिवशी प्रति एकरी ५० किलो युरिया + ५० किलो डीएपी + २५ किलो म्युरेट ऑफ पोटॅश (MOP) द्या.\n' +
-          '२. फुटवे वाढीसाठी १९:१९:१९ विद्राव्य खताची (५ ग्रॅम/लिटर) फवारणी करा.\n' +
-          '३. पाणी साचू न देता वाफसा स्थितीत पाणी द्या.';
+      if (language === 'hi') {
+        if (query.includes('प्याज') || query.includes('झुलसा')) {
+          aiResponseText =
+            'प्याज में बैंगनी धब्बा (पर्पल ब्लॉच) नियंत्रण उपाय:\n\n' +
+            '१. लक्षण दिखते ही मैंकोजेब ७५% WP ३० ग्राम या टेबुकोनाजोल १५ मिली प्रति १५ लीटर पंप में छिड़कें।\n' +
+            '२. दवा पत्तियों पर टिकने के लिए १ ग्राम स्टीकर (स्प्रेडर) अवश्य मिलाएं।\n' +
+            '३. यूरिया का अत्यधिक प्रयोग न करें तथा खेत में जलभराव रोकें।';
+        } else if (query.includes('कपास') || query.includes('सुंडी')) {
+          aiResponseText =
+            'कपास में गुलाबी सुंडी नियंत्रण के उपाय:\n\n' +
+            '१. प्रति एकड़ ५ फेरोमोन ट्रैप लगाएं।\n' +
+            '२. ट्राइकोकार्ड ३ कार्ड प्रति एकड़ की दर से लगाएं।\n' +
+            '३. प्रकोप अधिक होने पर इमामेक्टिन बेंजोएट ५% SG ४ ग्राम प्रति पंप छिड़कें।';
+        } else {
+          aiResponseText =
+            `आपके "${query}" प्रश्न के संदर्भ में कृषि विज्ञान केंद्र की वैज्ञानिक सिफारिश:\n\n` +
+            '१. मिट्टी परीक्षण रिपोर्ट के आधार पर उर्वरकों का संतुलित उपयोग करें।\n' +
+            '२. कीटनाशक का छिड़काव सुबह १० बजे से पहले या शाम ४ बजे के बाद शांत मौसम में करें।\n' +
+            '३. अधिक जानकारी के लिए किसान कॉल सेंटर १८००-१८०-१५५१ पर संपर्क करें।';
+        }
+      } else if (language === 'en') {
+        if (query.toLowerCase().includes('onion') || query.toLowerCase().includes('blotch')) {
+          aiResponseText =
+            'Purple Blotch Control in Onions:\n\n' +
+            '1. Spray Mancozeb 75% WP @ 30 gm or Tebuconazole @ 15 ml per 15 liter knapsack sprayer at first symptom.\n' +
+            '2. Add 1 ml non-ionic surfactant/sticker per liter of water for proper foliage adherence.\n' +
+            '3. Avoid excess nitrogenous fertilizer and ensure good furrow drainage.';
+        } else if (query.toLowerCase().includes('cotton') || query.toLowerCase().includes('bollworm')) {
+          aiResponseText =
+            'Pink Bollworm Management in Cotton:\n\n' +
+            '1. Install 5 pheromone traps per acre for continuous monitoring.\n' +
+            '2. Release Trichogramma egg parasitoids @ 3 cards per acre at weekly intervals.\n' +
+            '3. If infestation crosses ETL, spray Emamectin Benzoate 5% SG @ 4 gm per 15 liter pump.';
+        } else {
+          aiResponseText =
+            `Agronomic Guidance for "${query}":\n\n` +
+            '1. Follow integrated nutrient management based on local soil test values.\n' +
+            '2. Carry out chemical spraying during calm morning or late evening hours to avoid drift.\n' +
+            '3. For immediate scientist assistance, dial Kisan Call Center 1800-180-1551.';
+        }
       } else {
-        aiResponseText =
-          `तुमच्या "${query}" या प्रश्नासाठी कृषी विज्ञान केंद्राच्या शिफारशीनुसार:\n\n` +
-          '१. पिकाच्या योग्य वाढीसाठी स्थानिक माती परीक्षण अहवालानुसार खतांचा समतोल वापर करा.\n' +
-          '२. रासायनिक फवारणी सकाळी १० पूर्वी किंवा संध्याकाळी ४ नंतर थंड वातावरणात करा.\n' +
-          '३. अधिक माहितीसाठी मोफत किसान कॉल सेंटर १८००-१८०-१५५१ वर संपर्क करू शकता.';
+        // Marathi
+        if (query.includes('कांदा') || query.includes('करपा')) {
+          aiResponseText =
+            'कांद्यावरील जांभळा करपा रोखण्यासाठी उपाय:\n\n' +
+            '१. सुरुवातीची लक्षणे दिसताच मॅन्कोझेब ३० ग्रॅम किंवा टेब्युकोनाझोल १५ मिली प्रति १५ लिटर पंपासाठी फवारा.\n' +
+            '२. औषध पानांवर टिकून राहण्यासाठी १ ग्रॅम स्टिकर अवश्य टाका.\n' +
+            '३. नत्राचा अतिरिक्त वापर टाळा व शेतात पाणी साचू देऊ नका.';
+        } else if (query.includes('बोंडअळी') || query.includes('कपाशी')) {
+          aiResponseText =
+            'कपाशीवरील गुलाबी बोंडअळी नियंत्रणासाठी सल्ला:\n\n' +
+            '१. एकरी ५ कामगंध सापळे लावावेत.\n' +
+            '२. अंड्यांच्या अवस्थेत ट्रायकोकार्ड ३ कार्ड प्रति एकर लावा.\n' +
+            '३. प्रादुर्भाव वाढल्यास इमामेक्टिन बेन्झोएट ५% SG ४ ग्रॅम प्रति पंप फवारणी करा.';
+        } else {
+          aiResponseText =
+            `तुमच्या "${query}" या प्रश्नासाठी कृषी विज्ञान केंद्राचा सल्ला:\n\n` +
+            '१. पिकाच्या योग्य वाढीसाठी स्थानिक माती परीक्षण अहवालानुसार खतांचा समतोल वापर करा.\n' +
+            '२. रासायनिक फवारणी सकाळी १० पूर्वी किंवा संध्याकाळी ४ नंतर थंड वातावरणात करा.\n' +
+            '३. अधिक माहितीसाठी किसान कॉल सेंटर १८००-१८०-१५५१ वर संपर्क करू शकता.';
+        }
       }
 
       const aiMsg = {
         id: `ai_${Date.now()}`,
         sender: 'ai',
         text: aiResponseText,
-        time: new Date().toLocaleTimeString('mr-IN', { hour: '2-digit', minute: '2-digit' }),
+        time: new Date().toLocaleTimeString(language === 'en' ? 'en-US' : 'mr-IN', {
+          hour: '2-digit',
+          minute: '2-digit',
+        }),
       };
 
       setMessages((prev) => [...prev, aiMsg]);
@@ -96,10 +196,7 @@ export default function AIAssistantScreen() {
   };
 
   const handleVoicePrompt = () => {
-    Alert.alert(
-      'व्हॉईस सर्च (आवाज ओळख)',
-      'माईक चालू झाला आहे. तुमचा शेती प्रश्न बोला...\n(Voice Recognition simulation)'
-    );
+    Alert.alert(t.voiceTitle, t.voiceMsg);
   };
 
   return (
@@ -113,10 +210,10 @@ export default function AIAssistantScreen() {
             <Ionicons name="sparkles" size={20} color="#7C3AED" />
           </View>
           <View>
-            <Text style={styles.title}>AI कृषी सल्लागार</Text>
+            <Text style={styles.title}>{t.title}</Text>
             <View style={styles.onlineStatusRow}>
               <View style={styles.onlineDot} />
-              <Text style={styles.onlineText}>२४/७ तत्पर</Text>
+              <Text style={styles.onlineText}>{t.online}</Text>
             </View>
           </View>
         </View>
@@ -125,7 +222,7 @@ export default function AIAssistantScreen() {
       {/* Suggested Quick Prompts */}
       <View style={styles.promptsContainer}>
         <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-          {QUICK_PROMPTS.map((p, idx) => (
+          {t.prompts.map((p, idx) => (
             <TouchableOpacity
               key={idx}
               style={styles.promptChip}
@@ -177,7 +274,7 @@ export default function AIAssistantScreen() {
         {isTyping && (
           <View style={[styles.messageBubble, styles.aiBubble, styles.typingBubble]}>
             <Ionicons name="ellipsis-horizontal" size={20} color="#7C3AED" />
-            <Text style={styles.typingText}>कृषी सल्ला तयार करत आहे...</Text>
+            <Text style={styles.typingText}>{t.typing}</Text>
           </View>
         )}
       </ScrollView>
@@ -194,7 +291,7 @@ export default function AIAssistantScreen() {
 
         <TextInput
           style={styles.input}
-          placeholder="येथे तुमचा शेती प्रश्न लिहा..."
+          placeholder={t.inputPlaceholder}
           placeholderTextColor={Colors.textTertiary}
           value={inputText}
           onChangeText={setInputText}

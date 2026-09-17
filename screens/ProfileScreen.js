@@ -1,5 +1,5 @@
-// KRUSHI-SOOTRA (कृषी-सूत्र)
-// Profile & Multi-Role Switching Screen (Apple HIG Standard)
+// KRUSHI-SOOTRA (कृषी-सूत्र / कृषि-सूत्र)
+// Profile & Multi-Role Switching Screen (100% Pure Isolated Multilingual)
 
 import React, { useState } from 'react';
 import {
@@ -13,9 +13,42 @@ import {
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { Colors, Radii, Shadows, Spacing, Typography } from '../constants/theme';
-import { ROLES, APP_NAME, APP_NAME_DEVANAGARI } from '../constants/branding';
+import { BRANDING, ROLES_DATA, UI_STRINGS } from '../constants/branding';
 import SegmentedControl from '../components/ui/SegmentedControl';
 import StatusBadge from '../components/ui/StatusBadge';
+
+const PROFILE_TEXTS = {
+  mr: {
+    userName: 'शरद पवार शेतकरी गट',
+    location: '📍 हवेली, जिल्हा: पुणे, महाराष्ट्र',
+    roleChangedTitle: 'भूमिका बदलली!',
+    activeRoleMsg: 'सध्याची सक्रिय भूमिका:',
+    confirmedStatus: 'निश्चित',
+    allTab: 'सर्व',
+    activeTab: 'सक्रिय',
+    completedTab: 'पूर्ण',
+  },
+  hi: {
+    userName: 'शरद पवार किसान समूह',
+    location: '📍 हवेली, जिला: पुणे, महाराष्ट्र',
+    roleChangedTitle: 'भूमिका बदली गई!',
+    activeRoleMsg: 'वर्तमान सक्रिय भूमिका:',
+    confirmedStatus: 'पक्की',
+    allTab: 'सभी',
+    activeTab: 'सक्रिय',
+    completedTab: 'पूर्ण',
+  },
+  en: {
+    userName: 'Sharad Pawar Farmers Club',
+    location: '📍 Haveli, District: Pune, Maharashtra',
+    roleChangedTitle: 'Role Updated!',
+    activeRoleMsg: 'Current Active Role:',
+    confirmedStatus: 'Confirmed',
+    allTab: 'All',
+    activeTab: 'Active',
+    completedTab: 'Done',
+  },
+};
 
 export default function ProfileScreen({
   currentRole = 'farmer',
@@ -24,9 +57,12 @@ export default function ProfileScreen({
   onLanguageChange,
   bookings = [],
 }) {
-  const [activeBookingSegment, setActiveBookingSegment] = useState(0); // 0: All, 1: Active, 2: Completed
+  const [activeBookingSegment, setActiveBookingSegment] = useState(0);
 
-  const allRolesList = Object.values(ROLES);
+  const t = PROFILE_TEXTS[currentLanguage] || PROFILE_TEXTS.mr;
+  const brand = BRANDING[currentLanguage] || BRANDING.mr;
+  const ui = UI_STRINGS[currentLanguage] || UI_STRINGS.mr;
+  const rolesList = Object.values(ROLES_DATA);
 
   const filterBookings = () => {
     if (activeBookingSegment === 1) {
@@ -42,10 +78,7 @@ export default function ProfileScreen({
 
   const handleCallHelpline = () => {
     Linking.openURL('tel:18001801551').catch(() => {
-      Alert.alert(
-        'किसान कॉल सेंटर',
-        'टोल फ्री क्रमांक: १८००-१८०-१५५१ (सकाळी ६ ते रात्री १०, मोफत कृषी सल्ला)'
-      );
+      Alert.alert(ui.helplineTitle, ui.helplineNumber);
     });
   };
 
@@ -55,54 +88,44 @@ export default function ProfileScreen({
       contentContainerStyle={styles.contentContainer}
       showsVerticalScrollIndicator={false}
     >
-      {/* Profile Header Inset Card */}
+      {/* Profile Header */}
       <View style={styles.profileCard}>
         <View style={styles.avatar}>
           <Ionicons name="person" size={32} color={Colors.primary} />
         </View>
         <View style={styles.profileDetails}>
-          <Text style={styles.farmerName}>शरद पवार शेतकरी गट</Text>
+          <Text style={styles.farmerName}>{t.userName}</Text>
           <Text style={styles.phoneText}>+91 98220 76543</Text>
-          <Text style={styles.villageText}>📍 हवेली, जिल्हा: पुणे, महाराष्ट्र</Text>
+          <Text style={styles.villageText}>{t.location}</Text>
         </View>
       </View>
 
-      {/* Role Switcher Section (5 Core Agricultural Roles) */}
+      {/* Role Switcher Section */}
       <View style={styles.sectionCard}>
         <View style={styles.sectionHeaderRow}>
           <Ionicons name="swap-horizontal" size={20} color={Colors.primary} />
-          <Text style={styles.sectionTitle}>तुमची भूमिका बदला (Dual Role)</Text>
+          <Text style={styles.sectionTitle}>{ui.switchRole}</Text>
         </View>
-        <Text style={styles.sectionSubtitle}>
-          तुम्ही एकाच ऍपमधून शेतकरी किंवा अवजार/मजूर पुरवठादार म्हणून काम करू शकता.
-        </Text>
+        <Text style={styles.sectionSubtitle}>{ui.switchRoleSub}</Text>
 
         <View style={styles.rolesList}>
-          {allRolesList.map((r) => {
+          {rolesList.map((r) => {
             const isSelected = currentRole === r.id;
+            const rName = r.name[currentLanguage] || r.name.mr;
+            const rDesc = r.desc[currentLanguage] || r.desc.mr;
+
             return (
               <TouchableOpacity
                 key={r.id}
-                style={[
-                  styles.roleItem,
-                  isSelected && styles.roleItemActive,
-                ]}
+                style={[styles.roleItem, isSelected && styles.roleItemActive]}
                 onPress={() => {
                   if (onRoleChange) onRoleChange(r.id);
-                  Alert.alert(
-                    'भूमिका बदलली!',
-                    `सध्याची सक्रिय भूमिका: ${r.marathi} (${r.name})`
-                  );
+                  Alert.alert(t.roleChangedTitle, `${t.activeRoleMsg} ${rName}`);
                 }}
                 activeOpacity={0.8}
               >
                 <View style={styles.roleItemLeft}>
-                  <View
-                    style={[
-                      styles.roleIconCircle,
-                      isSelected && styles.roleIconCircleActive,
-                    ]}
-                  >
+                  <View style={styles.roleIconCircle}>
                     <Ionicons
                       name={isSelected ? 'checkmark-circle' : 'ellipse-outline'}
                       size={20}
@@ -110,15 +133,10 @@ export default function ProfileScreen({
                     />
                   </View>
                   <View>
-                    <Text
-                      style={[
-                        styles.roleName,
-                        isSelected && styles.roleNameActive,
-                      ]}
-                    >
-                      {r.marathi} ({r.name})
+                    <Text style={[styles.roleName, isSelected && styles.roleNameActive]}>
+                      {rName}
                     </Text>
-                    <Text style={styles.roleDesc}>{r.description}</Text>
+                    <Text style={styles.roleDesc}>{rDesc}</Text>
                   </View>
                 </View>
               </TouchableOpacity>
@@ -131,14 +149,14 @@ export default function ProfileScreen({
       <View style={styles.sectionCard}>
         <View style={styles.sectionHeaderRow}>
           <Ionicons name="calendar" size={20} color={Colors.primary} />
-          <Text style={styles.sectionTitle}>माझे बुकिंग ट्रॅकर (Bookings)</Text>
+          <Text style={styles.sectionTitle}>{ui.myBookings}</Text>
         </View>
 
         <SegmentedControl
           segments={[
-            { label: `सर्व (${bookings.length})` },
-            { label: 'सक्रिय (Active)' },
-            { label: 'पूर्ण (Done)' },
+            { label: `${t.allTab} (${bookings.length})` },
+            { label: t.activeTab },
+            { label: t.completedTab },
           ]}
           selectedIndex={activeBookingSegment}
           onChange={(idx) => setActiveBookingSegment(idx)}
@@ -147,10 +165,8 @@ export default function ProfileScreen({
         {displayedBookings.length === 0 ? (
           <View style={styles.emptyBookings}>
             <Ionicons name="receipt-outline" size={36} color={Colors.textTertiary} />
-            <Text style={styles.emptyText}>अद्याप कोणतेही बुकिंग नाही.</Text>
-            <Text style={styles.emptySubText}>
-              अवजारे, मजूर किंवा गोदाम आरक्षित केल्यावर येथे दिसेल.
-            </Text>
+            <Text style={styles.emptyText}>{ui.noBookings}</Text>
+            <Text style={styles.emptySubText}>{ui.noBookingsSub}</Text>
           </View>
         ) : (
           displayedBookings.map((b) => (
@@ -158,7 +174,7 @@ export default function ProfileScreen({
               <View style={styles.bookingTopRow}>
                 <Text style={styles.bookingId}>{b.id}</Text>
                 <StatusBadge
-                  label={b.status === 'Confirmed' ? 'निश्चित' : b.status}
+                  label={b.status === 'Confirmed' ? t.confirmedStatus : b.status}
                   status="success"
                   size="small"
                 />
@@ -177,7 +193,7 @@ export default function ProfileScreen({
       <View style={styles.sectionCard}>
         <View style={styles.sectionHeaderRow}>
           <Ionicons name="language" size={20} color={Colors.primary} />
-          <Text style={styles.sectionTitle}>भाषा निवडा (App Language)</Text>
+          <Text style={styles.sectionTitle}>{ui.selectLanguage}</Text>
         </View>
 
         <View style={styles.langRow}>
@@ -190,18 +206,10 @@ export default function ProfileScreen({
             return (
               <TouchableOpacity
                 key={l.id}
-                style={[
-                  styles.langBtn,
-                  isSelected && styles.langBtnActive,
-                ]}
+                style={[styles.langBtn, isSelected && styles.langBtnActive]}
                 onPress={() => onLanguageChange && onLanguageChange(l.id)}
               >
-                <Text
-                  style={[
-                    styles.langBtnText,
-                    isSelected && styles.langBtnTextActive,
-                  ]}
-                >
+                <Text style={[styles.langBtnText, isSelected && styles.langBtnTextActive]}>
                   {l.label}
                 </Text>
               </TouchableOpacity>
@@ -210,7 +218,7 @@ export default function ProfileScreen({
         </View>
       </View>
 
-      {/* Emergency Kisan Call Center 1800-180-1551 */}
+      {/* Emergency Kisan Call Center */}
       <TouchableOpacity
         style={styles.helplineCard}
         onPress={handleCallHelpline}
@@ -220,23 +228,17 @@ export default function ProfileScreen({
           <Ionicons name="call" size={24} color="#DC2626" />
         </View>
         <View style={styles.helplineText}>
-          <Text style={styles.helplineTitle}>किसान कॉल सेंटर (Kisan Helpline)</Text>
-          <Text style={styles.helplinePhone}>१८००-१८०-१५५१ (टोल-फ्री २४ तास)</Text>
-          <Text style={styles.helplineSub}>
-            शासकीय कृषी तज्ज्ञांशी मोफत थेट संवाद साधा
-          </Text>
+          <Text style={styles.helplineTitle}>{ui.helplineTitle}</Text>
+          <Text style={styles.helplinePhone}>{ui.helplineNumber}</Text>
+          <Text style={styles.helplineSub}>{ui.helplineSub}</Text>
         </View>
         <Ionicons name="chevron-forward" size={20} color="#DC2626" />
       </TouchableOpacity>
 
-      {/* App Version Info */}
+      {/* Version Footer */}
       <View style={styles.versionFooter}>
-        <Text style={styles.versionText}>
-          {APP_NAME} ({APP_NAME_DEVANAGARI}) v1.0.0 (Production Build)
-        </Text>
-        <Text style={styles.versionSub}>
-          सर्व हक्क सुरक्षित • भारत सरकार व कृषी विभाग मान्यताप्राप्त मानके
-        </Text>
+        <Text style={styles.versionText}>{brand.appName} v1.0.0</Text>
+        <Text style={styles.versionSub}>{brand.copyright}</Text>
       </View>
     </ScrollView>
   );
@@ -341,7 +343,6 @@ const styles = StyleSheet.create({
   roleIconCircle: {
     marginRight: Spacing.md,
   },
-  roleIconCircleActive: {},
   roleName: {
     fontSize: Typography.sizes.body,
     fontWeight: Typography.weights.bold,

@@ -13,6 +13,36 @@ import { Ionicons } from '@expo/vector-icons';
 import { Colors, Radii, Shadows, Spacing, Typography } from '../constants/theme';
 import { fetchLiveWeatherData } from '../services/weatherApi';
 
+const WEATHER_LABELS = {
+  mr: {
+    loading: 'हवामान माहिती मिळवत आहे...',
+    offline: 'ऑफलाईन',
+    feelsLike: 'जाणवणारे तापमान: ',
+    rain: 'पाऊस',
+    wind: 'वारा',
+    humidity: 'आर्द्रता',
+    defaultCondition: 'निरभ्र',
+  },
+  hi: {
+    loading: 'मौसम की जानकारी प्राप्त हो रही है...',
+    offline: 'ऑफ़लाइन',
+    feelsLike: 'महसूस तापमान: ',
+    rain: 'बारिश',
+    wind: 'हवा',
+    humidity: 'नमी',
+    defaultCondition: 'साफ़',
+  },
+  en: {
+    loading: 'Fetching live weather...',
+    offline: 'Offline',
+    feelsLike: 'Feels like: ',
+    rain: 'Rain',
+    wind: 'Wind',
+    humidity: 'Humidity',
+    defaultCondition: 'Clear',
+  },
+};
+
 export default function WeatherCard({
   latitude = 18.5204,
   longitude = 73.8567,
@@ -22,6 +52,8 @@ export default function WeatherCard({
 }) {
   const [weather, setWeather] = useState(null);
   const [loading, setLoading] = useState(true);
+
+  const t = WEATHER_LABELS[language] || WEATHER_LABELS.mr;
 
   const loadWeather = async () => {
     setLoading(true);
@@ -48,9 +80,7 @@ export default function WeatherCard({
     return (
       <View style={[styles.card, styles.loadingCard]}>
         <ActivityIndicator size="small" color={Colors.primary} />
-        <Text style={styles.loadingText}>
-          {language === 'mr' ? 'हवामान माहिती मिळवत आहे...' : 'Fetching live weather...'}
-        </Text>
+        <Text style={styles.loadingText}>{t.loading}</Text>
       </View>
     );
   }
@@ -96,10 +126,14 @@ export default function WeatherCard({
       <View style={styles.headerRow}>
         <View style={styles.locationContainer}>
           <Ionicons name="location" size={16} color={Colors.primary} />
-          <Text style={styles.locationText}>{locationName}</Text>
+          <Text style={styles.locationText}>
+            {typeof locationName === 'object'
+              ? locationName[language] || locationName.mr || locationName.en
+              : locationName}
+          </Text>
           {weather?.isFallback && (
             <View style={styles.offlineChip}>
-              <Text style={styles.offlineChipText}>ऑफलाईन</Text>
+              <Text style={styles.offlineChipText}>{t.offline}</Text>
             </View>
           )}
         </View>
@@ -123,10 +157,10 @@ export default function WeatherCard({
           <Text style={styles.temperature}>{current?.temperature ?? '--'}°</Text>
           <View style={styles.tempDetails}>
             <Text style={styles.conditionText}>
-              {current?.conditionName ?? 'निरभ्र'}
+              {current?.conditionName ?? t.defaultCondition}
             </Text>
             <Text style={styles.feelsLikeText}>
-              {language === 'mr' ? 'जाणवणारे तापमान: ' : 'Feels like: '}
+              {t.feelsLike}
               {current?.apparentTemperature ?? '--'}°C
             </Text>
           </View>
@@ -145,9 +179,7 @@ export default function WeatherCard({
       <View style={styles.metricsContainer}>
         <View style={styles.metricItem}>
           <Ionicons name="water-outline" size={16} color={Colors.info} />
-          <Text style={styles.metricLabel}>
-            {language === 'mr' ? 'पाऊस' : 'Rain'}
-          </Text>
+          <Text style={styles.metricLabel}>{t.rain}</Text>
           <Text style={styles.metricValue}>
             {advisory?.rainProb ?? 0}%
           </Text>
@@ -157,9 +189,7 @@ export default function WeatherCard({
 
         <View style={styles.metricItem}>
           <Ionicons name="speedometer-outline" size={16} color={Colors.primaryLight} />
-          <Text style={styles.metricLabel}>
-            {language === 'mr' ? 'वारा' : 'Wind'}
-          </Text>
+          <Text style={styles.metricLabel}>{t.wind}</Text>
           <Text style={styles.metricValue}>
             {current?.windSpeed ?? 0} km/h
           </Text>
@@ -169,9 +199,7 @@ export default function WeatherCard({
 
         <View style={styles.metricItem}>
           <Ionicons name="cloud-outline" size={16} color={Colors.textSecondary} />
-          <Text style={styles.metricLabel}>
-            {language === 'mr' ? 'आर्द्रता' : 'Humidity'}
-          </Text>
+          <Text style={styles.metricLabel}>{t.humidity}</Text>
           <Text style={styles.metricValue}>
             {current?.humidity ?? 0}%
           </Text>

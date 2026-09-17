@@ -1,5 +1,5 @@
-// KRUSHI-SOOTRA (कृषी-सूत्र)
-// Equipment Rental Marketplace Screen (Apple HIG Agricultural Standard)
+// KRUSHI-SOOTRA (कृषी-सूत्र / कृषि-सूत्र)
+// Equipment Rental Marketplace Screen (100% Pure Isolated Multilingual Standard)
 
 import React, { useState, useMemo } from 'react';
 import {
@@ -16,22 +16,43 @@ import { Colors, Radii, Shadows, Spacing, Typography } from '../constants/theme'
 import EquipmentQuickCard from '../components/EquipmentQuickCard';
 import BottomSheet from '../components/ui/BottomSheet';
 import PrimaryButton from '../components/ui/PrimaryButton';
-import StatusBadge from '../components/ui/StatusBadge';
 import { filterByRadius, AGRICULTURAL_LOCATIONS } from '../services/locationService';
 
-const EQUIPMENT_CATEGORIES = [
-  { id: 'all', labelMr: 'सर्व', labelEn: 'All' },
-  { id: 'tractor', labelMr: 'ट्रॅक्टर', labelEn: 'Tractor' },
-  { id: 'rotavator', labelMr: 'रोटाव्हेटर', labelEn: 'Rotavator' },
-  { id: 'harvester', labelMr: 'हार्वेस्टर', labelEn: 'Harvester' },
-  { id: 'drone', labelMr: 'ड्रोन', labelEn: 'Drone' },
-  { id: 'leveler', labelMr: 'लेव्हलर', labelEn: 'Leveler' },
-];
+const EQUIPMENT_CATEGORIES = {
+  mr: [
+    { id: 'all', label: 'सर्व' },
+    { id: 'tractor', label: 'ट्रॅक्टर' },
+    { id: 'rotavator', label: 'रोटाव्हेटर' },
+    { id: 'harvester', label: 'हार्वेस्टर' },
+    { id: 'drone', label: 'ड्रोन' },
+    { id: 'leveler', label: 'लेव्हलर' },
+  ],
+  hi: [
+    { id: 'all', label: 'सभी' },
+    { id: 'tractor', label: 'ट्रैक्टर' },
+    { id: 'rotavator', label: 'रोटावेटर' },
+    { id: 'harvester', label: 'हार्वेस्टर' },
+    { id: 'drone', label: 'ड्रोन' },
+    { id: 'leveler', label: 'लेवलर' },
+  ],
+  en: [
+    { id: 'all', label: 'All' },
+    { id: 'tractor', label: 'Tractor' },
+    { id: 'rotavator', label: 'Rotavator' },
+    { id: 'harvester', label: 'Harvester' },
+    { id: 'drone', label: 'Drone' },
+    { id: 'leveler', label: 'Leveler' },
+  ],
+};
 
 const FULL_EQUIPMENT_DATA = [
   {
     id: 'eq_1',
-    name: 'महिंद्रा ५७५ DI ट्रॅक्टर (45 HP)',
+    name: {
+      mr: 'महिंद्रा ५७५ डीआय ट्रॅक्टर',
+      hi: 'महिंद्रा ५७५ डीआई ट्रैक्टर',
+      en: 'Mahindra 575 DI Tractor (45 HP)',
+    },
     brand: 'Mahindra',
     model: '575 DI Bhoomiputra',
     category: 'tractor',
@@ -41,16 +62,24 @@ const FULL_EQUIPMENT_DATA = [
     status: 'Available',
     latitude: 18.5300,
     longitude: 73.8700,
-    village: 'हवेली, पुणे',
-    ownerName: 'बाळासाहेब जाधव',
+    village: { mr: 'हवेली, पुणे', hi: 'हवेली, पुणे', en: 'Haveli, Pune' },
+    ownerName: { mr: 'बाळासाहेब जाधव', hi: 'बालासाहेब जाधव', en: 'Balasaheb Jadhav' },
     ownerPhone: '+91 98220 12345',
     rating: 4.9,
     reviewCount: 38,
-    features: ['पॉवर स्टिअरिंग', 'ड्युअल क्लच', 'डिझेल कार्यक्षम', 'ट्रॉली उपलब्ध'],
+    features: {
+      mr: ['पॉवर स्टिअरिंग', 'ड्युअल क्लच', 'डिझेल कार्यक्षम', 'ट्रॉली उपलब्ध'],
+      hi: ['पावर स्टीयरिंग', 'ड्यूल क्लच', 'डीजल बचत', 'ट्रॉली उपलब्ध'],
+      en: ['Power Steering', 'Dual Clutch', 'Fuel Efficient', 'Trolley Available'],
+    },
   },
   {
     id: 'eq_2',
-    name: 'शक्तीमान रोटाव्हेटर (७ फूट)',
+    name: {
+      mr: 'शक्तीमान रोटाव्हेटर (७ फूट)',
+      hi: 'शक्तिमान रोटावेटर (७ फीट)',
+      en: 'Shaktiman Rotavator (7 ft)',
+    },
     brand: 'Shaktiman',
     model: 'Champion Semi-Champion',
     category: 'rotavator',
@@ -60,16 +89,24 @@ const FULL_EQUIPMENT_DATA = [
     status: 'Available',
     latitude: 18.5600,
     longitude: 73.8100,
-    village: 'मांजरी, पुणे',
-    ownerName: 'सचिन शिंदे',
+    village: { mr: 'मांजरी, पुणे', hi: 'मांजरी, पुणे', en: 'Manjari, Pune' },
+    ownerName: { mr: 'सचिन शिंदे', hi: 'सचिन शिंदे', en: 'Sachin Shinde' },
     ownerPhone: '+91 98220 54321',
     rating: 4.8,
     reviewCount: 22,
-    features: ['हेव्ही ड्युटी ब्लेड्स', 'कडक जमिनीसाठी उत्तम', 'गियर ड्राइव्ह'],
+    features: {
+      mr: ['हेव्ही ड्युटी ब्लेड्स', 'कडक जमिनीसाठी उत्तम', 'गियर ड्राइव्ह'],
+      hi: ['मजबूत ब्लेड्स', 'कठोर भूमि के लिए उत्तम', 'गियर ड्राइव'],
+      en: ['Heavy Duty Blades', 'Ideal for Hard Soil', 'Gear Drive'],
+    },
   },
   {
     id: 'eq_3',
-    name: 'हाय-टेक कृषी ड्रोन (१६ लिटर फवारणी)',
+    name: {
+      mr: 'हाय-टेक कृषी फवारणी ड्रोन',
+      hi: 'हाई-टेक कृषि छिड़काव ड्रोन',
+      en: 'Hi-Tech Agri Spraying Drone (16L)',
+    },
     brand: 'IoTech',
     model: 'AgroBot 16L Hexacopter',
     category: 'drone',
@@ -79,16 +116,24 @@ const FULL_EQUIPMENT_DATA = [
     status: 'Available',
     latitude: 18.4900,
     longitude: 73.9100,
-    village: 'हडपसर, पुणे',
-    ownerName: 'अमोल पाटील (ड्रोन ऑपरेटर)',
+    village: { mr: 'हडपसर, पुणे', hi: 'हड़पसर, पुणे', en: 'Hadapsar, Pune' },
+    ownerName: { mr: 'अमोल पाटील (पायलट)', hi: 'अमोल पाटिल (पायलट)', en: 'Amol Patil (Certified Pilot)' },
     ownerPhone: '+91 98900 87654',
     rating: 5.0,
     reviewCount: 16,
-    features: ['१० मिनिटात १ एकर फवारणी', 'अचूक औषध वापर', 'सत्यापित पायलट'],
+    features: {
+      mr: ['१० मिनिटात १ एकर फवारणी', 'अचूक औषध वापर', 'सत्यापित पायलट'],
+      hi: ['१० मिनट में १ एकड़ छिड़काव', 'सटीक दवा प्रयोग', 'सत्यापित पायलट'],
+      en: ['1 Acre Spray in 10 mins', 'Precise Chemical Use', 'Certified Pilot'],
+    },
   },
   {
     id: 'eq_4',
-    name: 'लेझर लँड लेव्हलर (जमीन सपाटीकरण)',
+    name: {
+      mr: 'लेझर जमीन सपाटीकरण यंत्र',
+      hi: 'लेजर भूमि समतलीकरण यंत्र',
+      en: 'Laser Land Leveler Pro-7',
+    },
     brand: 'Gahir',
     model: 'Laser Level Pro-7',
     category: 'leveler',
@@ -98,16 +143,24 @@ const FULL_EQUIPMENT_DATA = [
     status: 'Available',
     latitude: 18.6200,
     longitude: 73.7900,
-    village: 'पिंपरी, पुणे',
-    ownerName: 'दत्तात्रय गायकवाड',
+    village: { mr: 'पिंपरी, पुणे', hi: 'पिंपरी, पुणे', en: 'Pimpri, Pune' },
+    ownerName: { mr: 'दत्तात्रय गायकवाड', hi: 'दत्तात्रेय गायकवाड़', en: 'Dattatray Gaikwad' },
     ownerPhone: '+91 97630 11223',
     rating: 4.7,
     reviewCount: 19,
-    features: ['३०% पाण्याची बचत', 'अचूक सपाटी', 'ट्रॅक्टरसह उपलब्ध'],
+    features: {
+      mr: ['३०% पाण्याची बचत', 'अचूक सपाटी', 'ट्रॅक्टरसह उपलब्ध'],
+      hi: ['३०% पानी की बचत', 'सटीक समतलीकरण', 'ट्रैक्टर सहित'],
+      en: ['30% Water Savings', 'Precision Leveling', 'Tractor Included'],
+    },
   },
   {
     id: 'eq_5',
-    name: 'प्रीत कम्बाईन हार्वेस्टर (धान्य कापणी)',
+    name: {
+      mr: 'प्रीत कम्बाईन कापणी यंत्र',
+      hi: 'प्रीत कंबाइन कटाई यंत्र',
+      en: 'Preet Combine Harvester',
+    },
     brand: 'Preet',
     model: '987 Multi-Crop',
     category: 'harvester',
@@ -117,14 +170,84 @@ const FULL_EQUIPMENT_DATA = [
     status: 'Available',
     latitude: 18.5800,
     longitude: 73.9500,
-    village: 'लोणी काळभोर, पुणे',
-    ownerName: 'रामभाऊ कदम',
+    village: { mr: 'लोणी काळभोर, पुणे', hi: 'लोनी कालभोर, पुणे', en: 'Loni Kalbhor, Pune' },
+    ownerName: { mr: 'रामभाऊ कदम', hi: 'रामभाऊ कदम', en: 'Rambhau Kadam' },
     ownerPhone: '+91 94230 99887',
     rating: 4.9,
     reviewCount: 45,
-    features: ['गहू, सोयाबीन, हरभरा कापणी', 'स्वच्छ दाणे', 'कमी नुकसान'],
+    features: {
+      mr: ['गहू, सोयाबीन, हरभरा कापणी', 'स्वच्छ दाणे', 'कमी नुकसान'],
+      hi: ['गेहूं, सोयाबीन, चना कटाई', 'साफ दाने', 'न्यूनतम बर्बादी'],
+      en: ['Wheat, Soybean, Gram Harvesting', 'Clean Grain Output', 'Zero Loss'],
+    },
   },
 ];
+
+const LOCALIZED_TEXTS = {
+  mr: {
+    title: 'कृषी अवजारे मार्केटप्लेस',
+    subtitle: 'जवळपास उपलब्ध ट्रॅक्टर व आधुनिक शेती यंत्रे',
+    searchPlaceholder: 'अवजार, ट्रॅक्टर किंवा मॉडेल शोधा...',
+    availableInRadius: 'अवजारे उपलब्ध (२०-३० किमी)',
+    directRate: 'शेतकरी थेट दर',
+    noEquipmentFound: 'कोणतेही अवजार सापडले नाही',
+    noEquipmentSub: 'कृपया वेगळा शोध शब्द वापरा किंवा इतर श्रेणी निवडा.',
+    selectBookingMode: 'बुकिंग प्रकार निवडा',
+    dailyMode: 'दिवस हिशोबाने',
+    acreMode: 'एकर हिशोबाने',
+    daysCount: 'दिवसांची संख्या:',
+    acresCount: 'एकर संख्या:',
+    baseRent: 'मूळ भाडे दर:',
+    platformFee: 'प्लॅटफॉर्म सुरक्षा शुल्क:',
+    totalPayable: 'एकूण देय रक्कम:',
+    safetyGuarantee: 'कृषी-सूत्र हमी: एकाच वेळेस दुहेरी बुकिंग प्रतिबंध व थेट मालक समन्वय.',
+    confirmBooking: 'बुकिंग निश्चित करा',
+    bookingSuccessTitle: 'बुकिंग यशस्वी!',
+    ownerLabel: 'मालक:',
+  },
+  hi: {
+    title: 'कृषि उपकरण मार्केटप्लेस',
+    subtitle: 'आसपास उपलब्ध ट्रैक्टर और आधुनिक कृषि मशीनें',
+    searchPlaceholder: 'उपकरण, ट्रैक्टर या मॉडल खोजें...',
+    availableInRadius: 'उपकरण उपलब्ध (२०-३० किमी)',
+    directRate: 'किसान सीधा दर',
+    noEquipmentFound: 'कोई उपकरण नहीं मिला',
+    noEquipmentSub: 'कृपया अन्य खोज शब्द का प्रयोग करें या श्रेणी बदलें।',
+    selectBookingMode: 'बुकिंग प्रकार चुनें',
+    dailyMode: 'दिन के अनुसार',
+    acreMode: 'एकड़ के अनुसार',
+    daysCount: 'दिनों की संख्या:',
+    acresCount: 'एकड़ संख्या:',
+    baseRent: 'मूल किराया दर:',
+    platformFee: 'प्लेटफॉर्म सुरक्षा शुल्क:',
+    totalPayable: 'कुल देय राशि:',
+    safetyGuarantee: 'कृषि-सूत्र गारंटी: दोहरा बुकिंग निषेध एवं सीधा मालिक समन्वय।',
+    confirmBooking: 'बुकिंग पक्की करें',
+    bookingSuccessTitle: 'बुकिंग सफल!',
+    ownerLabel: 'मालिक:',
+  },
+  en: {
+    title: 'Farm Equipment Marketplace',
+    subtitle: 'Available tractors and modern agricultural implements nearby',
+    searchPlaceholder: 'Search equipment, tractor or brand...',
+    availableInRadius: 'implements available (20-30 km)',
+    directRate: 'Direct Farmer Rates',
+    noEquipmentFound: 'No Equipment Found',
+    noEquipmentSub: 'Please try another search keyword or switch categories.',
+    selectBookingMode: 'Select Booking Mode',
+    dailyMode: 'Daily Basis',
+    acreMode: 'Acre Basis',
+    daysCount: 'Number of Days:',
+    acresCount: 'Number of Acres:',
+    baseRent: 'Base Rental Rate:',
+    platformFee: 'Platform Security Fee:',
+    totalPayable: 'Total Payable Amount:',
+    safetyGuarantee: 'Krushi-Sootra Guarantee: Zero double-booking & verified owner coordination.',
+    confirmBooking: 'Confirm Reservation',
+    bookingSuccessTitle: 'Booking Confirmed!',
+    ownerLabel: 'Owner:',
+  },
+};
 
 export default function EquipmentScreen({
   language = 'mr',
@@ -135,12 +258,13 @@ export default function EquipmentScreen({
   const [selectedItem, setSelectedItem] = useState(null);
   const [bookingModalVisible, setBookingModalVisible] = useState(false);
   const [bookingDays, setBookingDays] = useState(1);
-  const [bookingMode, setBookingMode] = useState('daily'); // 'daily' | 'acre'
+  const [bookingMode, setBookingMode] = useState('daily');
   const [acreCount, setAcreCount] = useState(2);
 
+  const t = LOCALIZED_TEXTS[language] || LOCALIZED_TEXTS.mr;
+  const categories = EQUIPMENT_CATEGORIES[language] || EQUIPMENT_CATEGORIES.mr;
   const activeLoc = AGRICULTURAL_LOCATIONS.PUNE;
 
-  // Filter by radius & category & search query
   const filteredEquipment = useMemo(() => {
     let items = filterByRadius(
       FULL_EQUIPMENT_DATA,
@@ -155,16 +279,16 @@ export default function EquipmentScreen({
 
     if (searchQuery.trim()) {
       const q = searchQuery.toLowerCase();
-      items = items.filter(
-        (it) =>
-          it.name.toLowerCase().includes(q) ||
-          it.brand.toLowerCase().includes(q) ||
-          it.village.toLowerCase().includes(q)
-      );
+      items = items.filter((it) => {
+        const name = (it.name[language] || it.name.mr).toLowerCase();
+        const brand = it.brand.toLowerCase();
+        const village = (it.village[language] || it.village.mr).toLowerCase();
+        return name.includes(q) || brand.includes(q) || village.includes(q);
+      });
     }
 
     return items;
-  }, [selectedCategory, searchQuery, activeLoc]);
+  }, [selectedCategory, searchQuery, activeLoc, language]);
 
   const openBookingSheet = (item) => {
     setSelectedItem(item);
@@ -174,24 +298,27 @@ export default function EquipmentScreen({
   };
 
   const calculateTotal = () => {
-    if (!selectedItem) return 0;
+    if (!selectedItem) return { base: 0, platformFee: 49, total: 49 };
     const base =
       bookingMode === 'daily'
         ? selectedItem.dailyPrice * bookingDays
         : selectedItem.acrePrice * acreCount;
-    const platformFee = 49; // Nominal zero-cost transparent fee
+    const platformFee = 49;
     return { base, platformFee, total: base + platformFee };
   };
 
   const handleConfirmBooking = () => {
     const cost = calculateTotal();
+    const itemName = selectedItem.name[language] || selectedItem.name.mr;
+    const owner = selectedItem.ownerName[language] || selectedItem.ownerName.mr;
+
     const newBooking = {
       id: `BK-${Date.now().toString().slice(-6)}`,
       resourceType: 'equipment',
-      resourceName: selectedItem.name,
-      providerName: selectedItem.ownerName,
+      resourceName: itemName,
+      providerName: owner,
       totalAmount: cost.total,
-      date: new Date().toLocaleDateString('mr-IN'),
+      date: new Date().toLocaleDateString(language === 'en' ? 'en-US' : 'mr-IN'),
       status: 'Confirmed',
     };
 
@@ -201,8 +328,8 @@ export default function EquipmentScreen({
     }
 
     Alert.alert(
-      'बुकिंग यशस्वी!',
-      `${selectedItem.name} चे बुकिंग यशस्वीरीत्या झाले आहे.\nएकूण रक्कम: ₹${cost.total}\nमालक: ${selectedItem.ownerName} (${selectedItem.ownerPhone})`
+      t.bookingSuccessTitle,
+      `${itemName}\n${t.totalPayable}: ₹${cost.total}\n${t.ownerLabel} ${owner} (${selectedItem.ownerPhone})`
     );
   };
 
@@ -210,17 +337,15 @@ export default function EquipmentScreen({
     <View style={styles.container}>
       {/* Header Search & Title */}
       <View style={styles.header}>
-        <Text style={styles.title}>कृषी अवजारे मार्केटप्लेस</Text>
-        <Text style={styles.subtitle}>
-          जवळपास उपलब्ध ट्रॅक्टर व आधुनिक शेती यंत्रे
-        </Text>
+        <Text style={styles.title}>{t.title}</Text>
+        <Text style={styles.subtitle}>{t.subtitle}</Text>
 
-        {/* Apple HIG Inset Search Input */}
+        {/* Search Input */}
         <View style={styles.searchBox}>
           <Ionicons name="search" size={18} color={Colors.textSecondary} />
           <TextInput
             style={styles.searchInput}
-            placeholder="अवजार, ट्रॅक्टर किंवा मॉडेल शोधा..."
+            placeholder={t.searchPlaceholder}
             placeholderTextColor={Colors.textTertiary}
             value={searchQuery}
             onChangeText={setSearchQuery}
@@ -240,25 +365,17 @@ export default function EquipmentScreen({
           showsHorizontalScrollIndicator={false}
           contentContainerStyle={styles.categoryPillsContent}
         >
-          {EQUIPMENT_CATEGORIES.map((cat) => {
+          {categories.map((cat) => {
             const isSelected = selectedCategory === cat.id;
             return (
               <TouchableOpacity
                 key={cat.id}
-                style={[
-                  styles.pill,
-                  isSelected && styles.selectedPill,
-                ]}
+                style={[styles.pill, isSelected && styles.selectedPill]}
                 onPress={() => setSelectedCategory(cat.id)}
                 activeOpacity={0.8}
               >
-                <Text
-                  style={[
-                    styles.pillText,
-                    isSelected && styles.selectedPillText,
-                  ]}
-                >
-                  {language === 'mr' ? cat.labelMr : cat.labelEn}
+                <Text style={[styles.pillText, isSelected && styles.selectedPillText]}>
+                  {cat.label}
                 </Text>
               </TouchableOpacity>
             );
@@ -273,27 +390,29 @@ export default function EquipmentScreen({
       >
         <View style={styles.resultsMetaRow}>
           <Text style={styles.resultsCountText}>
-            {filteredEquipment.length} अवजारे उपलब्ध (२०-३० किमी)
+            {filteredEquipment.length} {t.availableInRadius}
           </Text>
           <View style={styles.verifiedTag}>
             <Ionicons name="shield-checkmark" size={14} color={Colors.primary} />
-            <Text style={styles.verifiedTagText}>शेतकरी थेट दर</Text>
+            <Text style={styles.verifiedTagText}>{t.directRate}</Text>
           </View>
         </View>
 
         {filteredEquipment.length === 0 ? (
           <View style={styles.emptyState}>
             <Ionicons name="construct-outline" size={48} color={Colors.textTertiary} />
-            <Text style={styles.emptyStateTitle}>कोणतेही अवजार सापडले नाही</Text>
-            <Text style={styles.emptyStateDesc}>
-              कृपया वेगळा शोध शब्द वापरा किंवा इतर श्रेणी निवडा.
-            </Text>
+            <Text style={styles.emptyStateTitle}>{t.noEquipmentFound}</Text>
+            <Text style={styles.emptyStateDesc}>{t.noEquipmentSub}</Text>
           </View>
         ) : (
           filteredEquipment.map((item) => (
             <EquipmentQuickCard
               key={item.id}
-              item={item}
+              item={{
+                ...item,
+                name: item.name[language] || item.name.mr,
+                village: item.village[language] || item.village.mr,
+              }}
               language={language}
               onPress={() => openBookingSheet(item)}
               onBook={() => openBookingSheet(item)}
@@ -306,14 +425,14 @@ export default function EquipmentScreen({
       <BottomSheet
         visible={bookingModalVisible}
         onClose={() => setBookingModalVisible(false)}
-        title={selectedItem?.name}
-        subtitle={`${selectedItem?.village} • ${selectedItem?.ownerName}`}
+        title={selectedItem ? (selectedItem.name[language] || selectedItem.name.mr) : ''}
+        subtitle={selectedItem ? `${selectedItem.village[language] || selectedItem.village.mr} • ${selectedItem.ownerName[language] || selectedItem.ownerName.mr}` : ''}
       >
         {selectedItem && (
           <View style={styles.sheetBody}>
             {/* Features Tags */}
             <View style={styles.featuresRow}>
-              {selectedItem.features.map((feat, idx) => (
+              {(selectedItem.features[language] || selectedItem.features.mr).map((feat, idx) => (
                 <View key={idx} style={styles.featureBadge}>
                   <Text style={styles.featureBadgeText}>✓ {feat}</Text>
                 </View>
@@ -321,39 +440,23 @@ export default function EquipmentScreen({
             </View>
 
             {/* Booking Mode Selector (Daily vs Acre) */}
-            <Text style={styles.formSectionTitle}>बुकिंग प्रकार निवडा</Text>
+            <Text style={styles.formSectionTitle}>{t.selectBookingMode}</Text>
             <View style={styles.modeToggleRow}>
               <TouchableOpacity
-                style={[
-                  styles.modeButton,
-                  bookingMode === 'daily' && styles.modeButtonActive,
-                ]}
+                style={[styles.modeButton, bookingMode === 'daily' && styles.modeButtonActive]}
                 onPress={() => setBookingMode('daily')}
               >
-                <Text
-                  style={[
-                    styles.modeButtonText,
-                    bookingMode === 'daily' && styles.modeButtonTextActive,
-                  ]}
-                >
-                  दिवस हिशोबाने (₹{selectedItem.dailyPrice}/दिवस)
+                <Text style={[styles.modeButtonText, bookingMode === 'daily' && styles.modeButtonTextActive]}>
+                  {t.dailyMode} (₹{selectedItem.dailyPrice})
                 </Text>
               </TouchableOpacity>
 
               <TouchableOpacity
-                style={[
-                  styles.modeButton,
-                  bookingMode === 'acre' && styles.modeButtonActive,
-                ]}
+                style={[styles.modeButton, bookingMode === 'acre' && styles.modeButtonActive]}
                 onPress={() => setBookingMode('acre')}
               >
-                <Text
-                  style={[
-                    styles.modeButtonText,
-                    bookingMode === 'acre' && styles.modeButtonTextActive,
-                  ]}
-                >
-                  एकर हिशोबाने (₹{selectedItem.acrePrice}/एकर)
+                <Text style={[styles.modeButtonText, bookingMode === 'acre' && styles.modeButtonTextActive]}>
+                  {t.acreMode} (₹{selectedItem.acrePrice})
                 </Text>
               </TouchableOpacity>
             </View>
@@ -361,7 +464,7 @@ export default function EquipmentScreen({
             {/* Counter (Days or Acres) */}
             <View style={styles.counterRow}>
               <Text style={styles.counterLabel}>
-                {bookingMode === 'daily' ? 'दिवसांची संख्या:' : 'एकर संख्या:'}
+                {bookingMode === 'daily' ? t.daysCount : t.acresCount}
               </Text>
               <View style={styles.counterControls}>
                 <TouchableOpacity
@@ -396,31 +499,29 @@ export default function EquipmentScreen({
             {/* Cost Breakdown */}
             <View style={styles.costBox}>
               <View style={styles.costRow}>
-                <Text style={styles.costLabel}>मूळ भाडे दर:</Text>
+                <Text style={styles.costLabel}>{t.baseRent}</Text>
                 <Text style={styles.costVal}>₹{calculateTotal().base}</Text>
               </View>
               <View style={styles.costRow}>
-                <Text style={styles.costLabel}>प्लॅटफॉर्म सुरक्षा व हमी शुल्क:</Text>
+                <Text style={styles.costLabel}>{t.platformFee}</Text>
                 <Text style={styles.costVal}>₹{calculateTotal().platformFee}</Text>
               </View>
               <View style={styles.costDivider} />
               <View style={styles.costRow}>
-                <Text style={styles.totalLabel}>एकूण देय रक्कम:</Text>
+                <Text style={styles.totalLabel}>{t.totalPayable}</Text>
                 <Text style={styles.totalVal}>₹{calculateTotal().total}</Text>
               </View>
             </View>
 
-            {/* Double-booking safety note */}
+            {/* Safety Guarantee */}
             <View style={styles.safetyNote}>
               <Ionicons name="shield-checkmark" size={16} color={Colors.primary} />
-              <Text style={styles.safetyNoteText}>
-                कृषी-सूत्र हमी: एकाच वेळेस दुहेरी बुकिंग प्रतिबंध व थेट मालक समन्वय.
-              </Text>
+              <Text style={styles.safetyNoteText}>{t.safetyGuarantee}</Text>
             </View>
 
-            {/* Prominent Action Button */}
+            {/* Action Button */}
             <PrimaryButton
-              title="बुकिंग निश्चित करा"
+              title={t.confirmBooking}
               icon="checkmark-circle"
               onPress={handleConfirmBooking}
               style={{ marginTop: Spacing.md }}
@@ -632,7 +733,6 @@ const styles = StyleSheet.create({
     borderColor: Colors.border,
     alignItems: 'center',
     justifyContent: 'center',
-    ...Shadows.subtle,
   },
   counterBtnText: {
     fontSize: 18,

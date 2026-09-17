@@ -5,27 +5,21 @@ import React from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, Platform } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { Colors, Radii, Shadows, Spacing, Typography } from '../constants/theme';
-
-export const TABS = [
-  { id: 'home', labelMr: 'मुख्य', labelEn: 'Home', icon: 'home', outlineIcon: 'home-outline' },
-  { id: 'equipment', labelMr: 'अवजारे', labelEn: 'Equipment', icon: 'construct', outlineIcon: 'construct-outline' },
-  { id: 'labour', labelMr: 'मजूर', labelEn: 'Labour', icon: 'people', outlineIcon: 'people-outline' },
-  { id: 'storage', labelMr: 'गोदाम', labelEn: 'Storage', icon: 'business', outlineIcon: 'business-outline' },
-  { id: 'lab', labelMr: 'लॅब व AI', labelEn: 'Lab & AI', icon: 'flask', outlineIcon: 'flask-outline', badge: 'AI' },
-  { id: 'profile', labelMr: 'खाते', labelEn: 'Profile', icon: 'person', outlineIcon: 'person-outline' },
-];
+import { NAV_TABS } from '../constants/branding';
 
 export default function AppBottomNav({
   activeTab = 'home',
   onSelectTab,
   language = 'mr',
 }) {
+  const currentTabs = NAV_TABS[language] || NAV_TABS.mr;
+
   return (
     <View style={styles.container}>
       <View style={styles.navBar}>
-        {TABS.map((tab) => {
+        {currentTabs.map((tab) => {
           const isActive = activeTab === tab.id;
-          const label = language === 'mr' ? tab.labelMr : tab.labelEn;
+          const label = tab.label;
 
           return (
             <TouchableOpacity

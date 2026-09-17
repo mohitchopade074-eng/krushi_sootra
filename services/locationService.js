@@ -124,10 +124,34 @@ export function formatDistance(distanceKm, language = 'mr') {
 
 // Default reference coordinates for Maharashtra agricultural hubs
 export const AGRICULTURAL_LOCATIONS = {
-  PUNE: { name: 'पुणे (हवेली)', lat: 18.5204, lon: 73.8567 },
-  NASHIK: { name: 'नाशिक (निफाड)', lat: 19.9975, lon: 73.7898 },
-  KOLHAPUR: { name: 'कोल्हापूर (शिरोळ)', lat: 16.7050, lon: 74.2433 },
-  AURANGABAD: { name: 'छत्रपती संभाजीनगर', lat: 19.8762, lon: 75.3433 },
-  AMRAVATI: { name: 'अमरावती (अचलपूर)', lat: 20.9374, lon: 77.7796 },
-  SOLAPUR: { name: 'सोलापूर (पंढरपूर)', lat: 17.6599, lon: 75.9064 },
+  PUNE: {
+    name: { mr: 'पुणे (हवेली)', hi: 'पुणे (हवेली)', en: 'Pune (Haveli)' },
+    lat: 18.5204,
+    lon: 73.8567,
+  },
+  NASHIK: {
+    name: { mr: 'नाशिक (निफाड)', hi: 'नासिक (निफाड़)', en: 'Nashik (Niphad)' },
+    lat: 19.9975,
+    lon: 73.7898,
+  },
+  KOLHAPUR: {
+    name: { mr: 'कोल्हापूर (शिरोळ)', hi: 'कोल्हापुर (शिरोल)', en: 'Kolhapur (Shirol)' },
+    lat: 16.7050,
+    lon: 74.2433,
+  },
+  AURANGABAD: {
+    name: { mr: 'छत्रपती संभाजीनगर', hi: 'छत्रपति संभाजीनगर', en: 'Chhatrapati Sambhajinagar' },
+    lat: 19.8762,
+    lon: 75.3433,
+  },
+  AMRAVATI: {
+    name: { mr: 'अमरावती (अचलपूर)', hi: 'अमरावती (अचलपुर)', en: 'Amravati (Achalpur)' },
+    lat: 20.9374,
+    lon: 77.7796,
+  },
+  SOLAPUR: {
+    name: { mr: 'सोलापूर (पंढरपूर)', hi: 'सोलापुर (पंढरपुर)', en: 'Solapur (Pandharpur)' },
+    lat: 17.6599,
+    lon: 75.9064,
+  },
 };
